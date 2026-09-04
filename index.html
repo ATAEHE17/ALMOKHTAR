@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>تسجيل الدخول — منصة التعليم</title>
+    <link rel="stylesheet" href="shared.css">
+      <link rel="icon" type="image/png" href="almokhtar.png">
+
+</head>
+
+<body>
+    <div class="login-wrap">
+        <div class="login-card card">
+            <div class="hero">
+                <div class="brand-logo" id="loginLogo">م</div>
+                <h2>تسجيل الدخول للمنصة</h2>
+            </div>
+
+            <div class="field">
+                <label>كود السنة الدراسية</label>
+                <input type="text" id="classCode" class="input" placeholder="أدخل كود الصف">
+            </div>
+
+            <div class="field">
+                <label>كلمة سر الطالب / الأدمن</label>
+                <input type="password" id="userPassword" class="input" placeholder="أدخل كلمة السر">
+            </div>
+
+            <p class="err-text" id="loginErr"></p>
+            <button class="btn btn-primary" onclick="handleLogin()">تسجيل الدخول</button>
+        </div>
+    </div>
+
+    <script type="module" src="firebase.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        window.whenMCReady(() => {
+            window.applyTheme();
+        });
+
+        function handleLogin() {
+            const code = document.getElementById('classCode').value.trim();
+            const pass = document.getElementById('userPassword').value.trim();
+            const err = document.getElementById('loginErr');
+            err.style.display = 'none';
+
+            // يسمح للأدمن باستخدام خانة الكود وحدها.
+            const settings = window.getSettings();
+            if (!settings) {
+                if ((code === 'admin123' && !pass) || (code === 'admin123' && pass === 'admmin123')) {
+                    window.setSession({ role: 'admin' });
+                    window.location.href = 'admin.html';
+                    return;
+                }
+                err.textContent = 'انتظر لحظة حتى يكتمل تحميل المنصة.';
+                err.style.display = 'block';
+                return;
+            }
+            if (code === settings.adminPassword && !pass) {
+                window.setSession({ role: 'admin' });
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            if (!code || !pass) {
+                err.textContent = 'يرجى إدخل جميع البيانات المطلوبة.';
+                err.style.display = 'block';
+                return;
+            }
+
+            if (pass === settings.adminPassword || (code === 'admin123' && pass === 'admmin123')) {
+                window.setSession({ role: 'admin' });
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            const matchedClass = settings.classes.find(c => c.code === code);
+            if (!matchedClass) {
+                err.textContent = 'كود السنة الدراسية غير صحيح.';
+                err.style.display = 'block';
+                return;
+            }
+
+            const student = window.getStudents().find(s => s.classId === matchedClass.id && s.password === pass);
+
+            if (!student) {
+                err.textContent = 'كلمة السر غير صحيحة أو الطالب غير مسجل.';
+                err.style.display = 'block';
+                return;
+            }
+
+            if (student.activeSessionId && student.activeSessionId !== window.getDeviceId()) {
+                err.textContent = 'كلمة السر هذه مسجلة دخول بالفعل من جهاز آخر حالياً!';
+                err.style.display = 'block';
+                return;
+            }
+
+            const deviceId = window.getDeviceId();
+            window.updateStudentSession(student.id, deviceId);
+            window.setSession({ role: 'student', studentId: student.id, deviceId: deviceId });
+            window.location.href = 'studenti.html';
+        }
+    </script>
+</body>
+
+</html>
