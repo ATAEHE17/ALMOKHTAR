@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>لوحة تحكم الأستاذ — سنتر الرياضيات</title>
-      <link rel="icon" type="image/svg+xml" href="user-icon.svg">
+  <link rel="icon" type="image/svg+xml" href="user-icon.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
@@ -351,35 +351,327 @@
       height: 15px;
     }
 
-    .attendance-choice { position: relative; }
-    .attendance-menu { position: absolute; inset-inline-end: 0; top: calc(100% + 8px); z-index: 20; min-width: 240px; padding: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-2); backdrop-filter: blur(14px); display: none; }
-    .attendance-menu.open { display: block; }
-    .attendance-menu label { display: flex; align-items: center; gap: 8px; padding: 9px 8px; color: var(--text) !important; font-size: 13px; font-weight: 800; line-height: 1.5; cursor: pointer; }
-    .attendance-menu input { accent-color: var(--accent); }
-    .attendance-menu button { width: 100%; margin-top: 6px; border: 0; border-radius: 10px; padding: 8px; background: var(--accent); color: #fff; font-weight: 800; cursor: pointer; }
-    .attendance-text { border: 1px solid var(--line); border-radius: 11px; padding: 8px 10px; background: var(--card); color: var(--text); font-weight: 800; cursor: pointer; }
-    .student-clickable { cursor: pointer; }
-    .student-clickable:hover { border-color: var(--accent-2); }
-    .detail-list { display: grid; gap: 8px; max-height: 48vh; overflow: auto; }
-    .detail-item { padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--card-2); font-size: 12px; }
-    .message-form { margin-top: 16px; }
-    .message-form textarea { min-height: 92px; resize: vertical; }
-    .send-all { margin-top: 14px; }
-    .picker-button { width:100%; text-align:start; }
-    .picker-results { display:grid; gap:8px; max-height:48vh; overflow:auto; }
-    .picker-option { width:100%; text-align:start; border:1px solid var(--line); border-radius:13px; padding:11px 12px; background:var(--card-2); color:var(--text); cursor:pointer; font-family:inherit; }
-    .picker-option:hover { border-color:var(--accent-2); }
-    #section-grades.grades-modal-open { position:fixed; inset:0; z-index:55; display:block; overflow-y:auto; padding:24px; background:rgba(6,5,12,.72); backdrop-filter:blur(7px); }
-    #section-grades.grades-modal-open > .grades-modal-content { width:min(100%, 760px); margin:0 auto; padding:22px; background:var(--card); border:1px solid var(--line); border-radius:24px; }
-    .grades-modal-close { display:flex; margin:0 0 14px auto; }
-    .field label.file-picker { display:flex; align-items:center; gap:12px; width:100%; max-width:100%; padding:0; border:0; border-radius:0; background:transparent; color:var(--text-dim); cursor:pointer; font-size:13px; font-weight:700; }
-    .file-picker > span:first-child { flex-shrink:0; padding:8px 12px; border-radius:10px; background:var(--accent-soft); color:var(--accent-2); }
-    .file-picker-name { display:block; flex:1 1 180px; min-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; user-select:none; padding:9px 12px; border:1.5px solid var(--line); border-radius:12px; background:var(--bg-elev); color:var(--text-faint); }
-    .file-picker-name.has-file { color:var(--text); }
+    .attendance-choice {
+      position: relative;
+    }
+
+    .attendance-menu {
+      position: absolute;
+      inset-inline-end: 0;
+      top: calc(100% + 8px);
+      z-index: 80;
+      min-width: 240px;
+      padding: 10px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow-2);
+      backdrop-filter: blur(14px);
+      display: none;
+    }
+
+    .attendance-menu.open {
+      display: block;
+    }
+
+    .attendance-menu label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 8px;
+      color: var(--text) !important;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    .attendance-menu input {
+      accent-color: var(--accent);
+    }
+
+    .attendance-menu button {
+      width: 100%;
+      margin-top: 6px;
+      border: 0;
+      border-radius: 10px;
+      padding: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .attendance-text {
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 8px 10px;
+      background: var(--card);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .student-clickable {
+      cursor: pointer;
+    }
+
+    .student-clickable:hover {
+      border-color: var(--accent-2);
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 8px;
+      max-height: 48vh;
+      overflow: auto;
+    }
+
+    .detail-item {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-2);
+      font-size: 12px;
+    }
+
+    .message-form {
+      margin-top: 16px;
+    }
+
+    .message-form textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .send-all {
+      margin-top: 14px;
+    }
+
+    .picker-button {
+      width: 100%;
+      text-align: start;
+    }
+
+    .picker-results {
+      display: grid;
+      gap: 8px;
+      max-height: 48vh;
+      overflow: auto;
+    }
+
+    .picker-option {
+      width: 100%;
+      text-align: start;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 11px 12px;
+      background: var(--card-2);
+      color: var(--text);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .picker-option:hover {
+      border-color: var(--accent-2);
+    }
+
+    #section-grades.grades-modal-open {
+      position: fixed;
+      inset: 0;
+      z-index: 55;
+      display: block;
+      overflow-y: auto;
+      padding: 24px;
+      background: rgba(6, 5, 12, .72);
+      backdrop-filter: blur(7px);
+    }
+
+    #section-grades.grades-modal-open>.grades-modal-content {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 22px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+    }
+
+    .grades-modal-close {
+      display: flex;
+      margin: 0 0 14px auto;
+    }
+
+    .field label.file-picker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .file-picker>span:first-child {
+      flex-shrink: 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent-2);
+    }
+
+    .file-picker-name {
+      display: block;
+      flex: 1 1 180px;
+      min-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      user-select: none;
+      padding: 9px 12px;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg-elev);
+      color: var(--text-faint);
+    }
+
+    .file-picker-name.has-file {
+      color: var(--text);
+    }
+
+    .admin-bottom-nav {
+      position: fixed;
+      inset-inline: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 50;
+      display: none;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: end;
+      gap: 4px;
+      padding: 8px 8px 7px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow-2);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .admin-bottom-nav button {
+      min-width: 0;
+      min-height: 58px;
+      padding: 6px 2px;
+      border: 0;
+      border-radius: 16px;
+      background: transparent;
+      color: var(--text-faint);
+      font: inherit;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .admin-bottom-nav button.active {
+      color: var(--accent-2);
+      background: var(--accent-soft);
+    }
+
+    .admin-bottom-nav svg {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .admin-bottom-nav span {
+      display: none;
+    }
+
+    .admin-bottom-nav .bottom-add {
+      width: 58px;
+      height: 58px;
+      min-height: 58px;
+      margin: -22px auto 0;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--accent-2), var(--accent));
+      color: #fff;
+      box-shadow: 0 12px 24px -8px rgba(139, 92, 246, .65);
+    }
+
+    .admin-bottom-nav .bottom-add svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    @media(max-width:639px) {
+      .attendance-menu.open {
+        top: auto;
+        bottom: calc(100% + 8px);
+      }
+
+      .admin-bottom-nav {
+        display: grid;
+      }
+
+      .admin-page .topbar {
+        position: fixed;
+        top: 10px;
+        inset-inline: 12px;
+        z-index: 45;
+        width: auto;
+        margin: 0;
+        background: color-mix(in srgb, var(--card) 92%, transparent);
+        box-shadow: var(--shadow-1);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+
+      .admin-page>.shell-wide>.tabs {
+        display: none;
+      }
+
+      .admin-page .fab-add {
+        display: none !important;
+      }
+
+      .admin-page .shell-wide {
+        padding-top: 94px;
+        padding-bottom: 112px;
+      }
+    }
   </style>
 </head>
 
-<body>
+<body class="admin-page">
+
+  <div class="page-math-background" aria-hidden="true">
+    <span class="math-symbol">+</span>
+    <span class="math-symbol">&#x2211;</span>
+    <span class="math-symbol">&#x221E;</span>
+    <span class="math-symbol">&#x03C0;</span>
+    <span class="math-symbol">&#x03C0;</span>
+    <span class="math-symbol">&#x03C0;</span>
+    <span class="math-symbol">&#x03C0;</span>
+    <span class="math-symbol">&#x0394;</span>
+    <span class="math-symbol">&#x221A;</span>
+    <span class="math-symbol">&#x03B8;</span>
+    <span class="math-symbol">&#x222B;</span>
+    <span class="math-symbol">&#x2248;</span>
+    <span class="math-symbol">&#x03A3;</span>
+    <span class="math-symbol">&#x2202;</span>
+    <span class="math-symbol">&#x03BB;</span>
+    <span class="math-symbol">&#x03B1;</span>
+    <span class="math-symbol">&#x03B2;</span>
+  </div>
 
   <div class="mc-loader" id="mcLoader">
     <div class="spinner"></div><span>جاري التحميل...</span>
@@ -489,40 +781,42 @@
     <!-- GRADES -->
     <div class="section" id="section-grades" onclick="if(event.target === this) closeGradesModal()">
       <div class="grades-modal-content">
-      <button type="button" class="modal-close grades-modal-close" onclick="closeGradesModal()" aria-label="close">&times;</button>
-      <div class="card" style="margin-bottom:18px;">
-        <div class="field">
-          <label data-t="selectStudent">اختر الطالب</label>
-          <select id="gradeStudentSelect" class="input" hidden></select>
-          <button type="button" id="gradeStudentPicker" class="input picker-button" onclick="openStudentPicker()">اختر الطالب</button>
-        </div>
-        <div class="field">
-          <label data-t="examName">اسم الاختبار</label>
-          <input type="text" id="gradeExamName" class="input">
-        </div>
-        <div class="grid-2">
+        <button type="button" class="modal-close grades-modal-close" onclick="closeGradesModal()"
+          aria-label="close">&times;</button>
+        <div class="card" style="margin-bottom:18px;">
           <div class="field">
-            <label data-t="scoreObtained">الدرجة المحصلة</label>
-            <input type="number" id="gradeScore" class="input" inputmode="decimal" min="0" step="any">
+            <label data-t="selectStudent">اختر الطالب</label>
+            <select id="gradeStudentSelect" class="input" hidden></select>
+            <button type="button" id="gradeStudentPicker" class="input picker-button" onclick="openStudentPicker()">اختر
+              الطالب</button>
           </div>
           <div class="field">
-            <label data-t="scoreOutOf">الدرجة الكاملة</label>
-            <input type="number" id="gradeMax" class="input" inputmode="decimal" min="1" step="any" value="100">
+            <label data-t="examName">اسم الاختبار</label>
+            <input type="text" id="gradeExamName" class="input">
           </div>
+          <div class="grid-2">
+            <div class="field">
+              <label data-t="scoreObtained">الدرجة المحصلة</label>
+              <input type="number" id="gradeScore" class="input" inputmode="decimal" min="0" step="any">
+            </div>
+            <div class="field">
+              <label data-t="scoreOutOf">الدرجة الكاملة</label>
+              <input type="number" id="gradeMax" class="input" inputmode="decimal" min="1" step="any" value="100">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="submitGrade()" data-t="addGrade">إضافة درجة</button>
         </div>
-        <button class="btn btn-primary" onclick="submitGrade()" data-t="addGrade">إضافة درجة</button>
-      </div>
 
-      <div class="filters" style="margin-bottom:16px;">
-        <div class="chip-select" id="gradeFilterCenter"></div>
-        <div class="chip-select" id="gradeFilterClass"></div>
-      </div>
+        <div class="filters" style="margin-bottom:16px;">
+          <div class="chip-select" id="gradeFilterCenter"></div>
+          <div class="chip-select" id="gradeFilterClass"></div>
+        </div>
 
-      <h3 style="font-size:15px; margin-bottom:12px;" data-t="gradesList">سجل الدرجات</h3>
-      <div id="gradesList"></div>
-      <div class="empty-state" id="gradesEmpty" style="display:none;">
-        <p data-t="noGradesYet">لا يوجد درجات مسجلة بعد</p>
-      </div>
+        <h3 style="font-size:15px; margin-bottom:12px;" data-t="gradesList">سجل الدرجات</h3>
+        <div id="gradesList"></div>
+        <div class="empty-state" id="gradesEmpty" style="display:none;">
+          <p data-t="noGradesYet">لا يوجد درجات مسجلة بعد</p>
+        </div>
       </div>
     </div>
 
@@ -530,19 +824,66 @@
       <div class="card">
         <h3 style="font-size:15px; margin-bottom:12px;">رفع واجب</h3>
         <div class="field"><label>عنوان الواجب</label><input id="homeworkTitle" class="input" type="text"></div>
-        <div class="field"><label data-t="homeworkFileLabel">ملف PDF أو صورة</label><label class="file-picker"><span data-t="chooseFile">اختيار ملف</span><span class="file-picker-name" id="homeworkFileName" data-t="noFileChosen">لم يتم اختيار ملف</span><input id="homeworkFile" type="file" accept="application/pdf,image/*" hidden></label></div>
-        <div class="field"><label>السنتر والصف</label><div class="filters-row"><div class="chip-select" id="homeworkCenter"></div><div class="chip-select" id="homeworkClass"></div></div></div>
+        <div class="field"><label data-t="homeworkFileLabel">ملف PDF أو صورة</label><label class="file-picker"><span
+              data-t="chooseFile">اختيار ملف</span><span class="file-picker-name" id="homeworkFileName"
+              data-t="noFileChosen">لم يتم اختيار ملف</span><input id="homeworkFile" type="file"
+              accept="application/pdf,image/*" hidden></label></div>
+        <div class="field"><label>السنتر والصف</label>
+          <div class="filters-row">
+            <div class="chip-select" id="homeworkCenter"></div>
+            <div class="chip-select" id="homeworkClass"></div>
+          </div>
+        </div>
         <button class="btn btn-primary" onclick="submitHomework()">حفظ الواجب</button>
       </div>
       <div class="card message-form">
         <h3 style="font-size:15px; margin-bottom:12px;">إرسال ملاحظة</h3>
-        <div class="field"><label>بحث باسم الطالب</label><button type="button" id="noteStudentPicker" class="input picker-button" onclick="openNoteStudentPicker()">اختر طالباً للبحث</button></div>
-        <div class="field"><label>المستهدف</label><select id="noteTarget" class="input" hidden></select><button type="button" id="noteTargetPicker" class="input picker-button" onclick="openNoteTargetPicker()">كل الطلاب</button></div>
+        <div class="field"><label>بحث باسم الطالب</label><button type="button" id="noteStudentPicker"
+            class="input picker-button" onclick="openNoteStudentPicker()">اختر طالباً للبحث</button></div>
+        <div class="field"><label>المستهدف</label><select id="noteTarget" class="input" hidden></select><button
+            type="button" id="noteTargetPicker" class="input picker-button" onclick="openNoteTargetPicker()">كل
+            الطلاب</button></div>
         <div class="field"><textarea id="noteText" class="input" placeholder="اكتب الملاحظة"></textarea></div>
         <button class="btn btn-primary" onclick="submitNote()">إرسال الملاحظة</button>
       </div>
     </div>
   </div>
+
+  <nav class="admin-bottom-nav" aria-label="admin navigation">
+    <button type="button" class="active" data-bottom-tab="setup" onclick="switchTab('setup')" aria-label="الرئيسية">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
+      </svg>
+      <span data-t="mainSection">الرئيسية</span>
+    </button>
+    <button type="button" data-bottom-tab="grades" onclick="switchTab('grades')" aria-label="الدرجات">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="m12 3 2.3 4.7 5.2.8-3.8 3.7.9 5.2-4.6-2.5-4.6 2.5.9-5.2-3.8-3.7 5.2-.8z" />
+        <path d="M8 19.5 6.5 22M16 19.5l1.5 2" />
+      </svg>
+      <span data-t="gradesSection">الدرجات</span>
+    </button>
+    <button type="button" class="bottom-add" onclick="openAddStudentModal()" aria-label="add student">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" />
+      </svg>
+    </button>
+    <button type="button" data-bottom-tab="record" onclick="switchTab('record')" aria-label="السجل">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M3 12a9 9 0 1 0 3-6.7" />
+        <path d="M3 4v6h6M12 7v5l3 2" />
+      </svg>
+      <span data-t="fullRecord">السجل</span>
+    </button>
+    <button type="button" data-bottom-tab="communication" onclick="switchTab('communication')" aria-label="الواجبات">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M5 3h11l3 3v15H5z" />
+        <path d="M16 3v4h4M8 12h8M8 16h6" />
+        <path d="m15 18 4-4" />
+      </svg>
+      <span>الواجبات</span>
+    </button>
+  </nav>
 
   <button class="fab-add show" onclick="openAddStudentModal()" aria-label="add">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
@@ -613,12 +954,15 @@
 
       <div class="settings-block">
         <h4>تعديل كلمات مرور الطلاب</h4>
-        <input type="search" id="studentPasswordSearch" class="input" placeholder="ابحث باسم الطالب" oninput="renderPasswordStudents()">
+        <input type="search" id="studentPasswordSearch" class="input" placeholder="ابحث باسم الطالب"
+          oninput="renderPasswordStudents()">
         <div id="passwordStudentsWrap" class="detail-list" style="margin-top:10px;"></div>
         <div id="passwordEditor" style="display:none; margin-top:12px;">
           <div id="passwordStudentName" class="muted" style="font-size:13px; margin-bottom:7px;"></div>
-          <input type="password" id="newStudentPassword" class="input" placeholder="كلمة المرور الجديدة" autocomplete="new-password">
-          <button class="btn btn-primary" style="margin-top:8px;" onclick="saveStudentPassword()">حفظ كلمة المرور</button>
+          <input type="password" id="newStudentPassword" class="input" placeholder="كلمة المرور الجديدة"
+            autocomplete="new-password">
+          <button class="btn btn-primary" style="margin-top:8px;" onclick="saveStudentPassword()">حفظ كلمة
+            المرور</button>
         </div>
       </div>
 
@@ -636,40 +980,57 @@
   </div>
 
   <div class="overlay" id="studentDetailModal">
-    <div class="modal"><div class="modal-head"><span class="modal-title" id="detailStudentTitle">بيانات الطالب</span><button class="modal-close" onclick="closeModal('studentDetailModal')">&times;</button></div>
-      <div class="tabs"><button class="tab active" onclick="showStudentDetail('attendance')">الحضور والغياب</button><button class="tab" onclick="showStudentDetail('grades')">الدرجات</button></div>
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title" id="detailStudentTitle">بيانات الطالب</span><button
+          class="modal-close" onclick="closeModal('studentDetailModal')">&times;</button></div>
+      <div class="tabs"><button class="tab active" onclick="showStudentDetail('attendance')">الحضور
+          والغياب</button><button class="tab" onclick="showStudentDetail('grades')">الدرجات</button></div>
       <div class="detail-list" id="studentDetailList"></div>
       <button class="btn btn-bad" style="margin-top:14px" onclick="removeDetailStudent()">حذف الطالب نهائياً</button>
     </div>
   </div>
 
   <div class="overlay" id="resetConfirmModal">
-    <div class="modal"><div class="modal-head"><span class="modal-title">تأكيد تصفير البيانات</span><button class="modal-close" onclick="closeModal('resetConfirmModal')">&times;</button></div>
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title">تأكيد تصفير البيانات</span><button class="modal-close"
+          onclick="closeModal('resetConfirmModal')">&times;</button></div>
       <p id="resetConfirmText" class="muted" style="font-size:13px; line-height:1.8; margin-bottom:16px;"></p>
-      <div class="grid-2"><button class="btn btn-ghost" onclick="closeModal('resetConfirmModal')">إلغاء</button><button class="btn btn-bad" onclick="continueResetData()">متابعة</button></div>
+      <div class="grid-2"><button class="btn btn-ghost" onclick="closeModal('resetConfirmModal')">إلغاء</button><button
+          class="btn btn-bad" onclick="continueResetData()">متابعة</button></div>
     </div>
   </div>
 
   <div class="overlay" id="studentPickerModal">
-    <div class="modal"><div class="modal-head"><span class="modal-title">اختيار الطالب</span><button class="modal-close" onclick="closeModal('studentPickerModal')">&times;</button></div>
-      <input id="gradeStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب" oninput="renderStudentPicker()">
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title">اختيار الطالب</span><button class="modal-close"
+          onclick="closeModal('studentPickerModal')">&times;</button></div>
+      <input id="gradeStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب"
+        oninput="renderStudentPicker()">
       <div class="picker-results" id="studentPickerResults" style="margin-top:12px;"></div>
     </div>
   </div>
   <div class="overlay" id="noteStudentPickerModal">
-    <div class="modal"><div class="modal-head"><span class="modal-title">اختيار طالب للملاحظة</span><button class="modal-close" onclick="closeModal('noteStudentPickerModal')">&times;</button></div>
-      <input id="noteStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب" oninput="renderNoteStudentPicker()">
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title">اختيار طالب للملاحظة</span><button class="modal-close"
+          onclick="closeModal('noteStudentPickerModal')">&times;</button></div>
+      <input id="noteStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب"
+        oninput="renderNoteStudentPicker()">
       <div class="picker-results" id="noteStudentPickerResults" style="margin-top:12px;"></div>
     </div>
   </div>
   <div class="overlay" id="noteTargetPickerModal">
-    <div class="modal"><div class="modal-head"><span class="modal-title">اختيار مستهدف الملاحظة</span><button class="modal-close" onclick="closeModal('noteTargetPickerModal')">&times;</button></div>
-      <input id="noteTargetSearch" class="input" type="search" placeholder="ابحث باسم الطالب" oninput="renderNoteTargetPicker()">
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title">اختيار مستهدف الملاحظة</span><button class="modal-close"
+          onclick="closeModal('noteTargetPickerModal')">&times;</button></div>
+      <input id="noteTargetSearch" class="input" type="search" placeholder="ابحث باسم الطالب"
+        oninput="renderNoteTargetPicker()">
       <div class="picker-results" id="noteTargetPickerResults" style="margin-top:12px;"></div>
     </div>
   </div>
   <div class="overlay" id="classCenterPickerModal">
-    <div class="modal"><div class="modal-head"><span class="modal-title" id="classCenterPickerTitle">اختيار السنتر</span><button class="modal-close" onclick="closeModal('classCenterPickerModal')">&times;</button></div>
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title" id="classCenterPickerTitle">اختيار السنتر</span><button
+          class="modal-close" onclick="closeModal('classCenterPickerModal')">&times;</button></div>
       <div class="picker-results" id="classCenterPickerResults"></div>
     </div>
   </div>
@@ -721,6 +1082,7 @@
     /* ---------- tabs ---------- */
     function switchTab(name) {
       document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === name); });
+      document.querySelectorAll('[data-bottom-tab]').forEach(function (t) { t.classList.toggle('active', t.dataset.bottomTab === name); });
       document.querySelectorAll('.section').forEach(function (s) { s.classList.remove('active'); });
       var targetSection = document.getElementById('section-' + name);
       targetSection.classList.add('active');
@@ -734,6 +1096,7 @@
     window.closeGradesModal = function () {
       document.getElementById('section-grades').classList.remove('active', 'grades-modal-open');
       document.querySelectorAll('.tab').forEach(function (tab) { tab.classList.toggle('active', tab.dataset.tab === 'setup'); });
+      document.querySelectorAll('[data-bottom-tab]').forEach(function (tab) { tab.classList.toggle('active', tab.dataset.bottomTab === 'setup'); });
       document.getElementById('section-setup').classList.add('active');
       document.querySelector('.fab-add').classList.add('show');
     };
@@ -770,7 +1133,7 @@
           '<div class="stu-actions">' +
           '<button class="pay-pill ' + (s.paid ? 'on' : '') + '" data-id="' + s.id + '" data-act="paid">' + (s.paid ? window.t('paid') : window.t('unpaid')) + '</button>' +
           '<div class="attendance-choice"><button class="attendance-text" data-id="' + s.id + '" data-act="present">حاضر</button><div class="attendance-menu" data-menu="' + s.id + '">' +
-          '<label><input type="checkbox" value="حاضر في الميعاد"> حاضر في الميعاد</label><label><input type="checkbox" value="حاضر متأخر عن الميعاد"> حاضر متأخر عن الميعاد</label><label><input type="checkbox" value="خرج قبل انتهاء الحصة"> خرج قبل انتهاء الحصة</label><label><input type="checkbox" value="خرج في الميعاد"> خرج في الميعاد</label><button data-save-attendance="' + s.id + '">تسجيل الحضور</button></div></div>' +
+          '<label><input type="radio" name="arrival-' + s.id + '" value="حاضر في الميعاد"> حاضر في الميعاد</label><label><input type="radio" name="arrival-' + s.id + '" value="حاضر متأخر عن الميعاد"> حاضر متأخر عن الميعاد</label><label><input type="radio" name="departure-' + s.id + '" value="خرج قبل انتهاء الحصة"> خرج قبل انتهاء الحصة</label><label><input type="radio" name="departure-' + s.id + '" value="خرج في الميعاد"> خرج في الميعاد</label><button data-save-attendance="' + s.id + '">تسجيل الحضور</button></div></div>' +
           '<button class="attendance-text" data-id="' + s.id + '" data-act="absent">غائب</button>' +
           '</div>';
         list.appendChild(row);
@@ -1109,8 +1472,8 @@
 
     function setupCommunication() {
       var center = document.getElementById('homeworkCenter'), cls = document.getElementById('homeworkClass');
-      renderChips('homeworkCenter', settings.centers, function (x) { return x; }, function (x) { return x; }, settings.centers[0], function () {});
-      renderChips('homeworkClass', settings.classes, className, function (x) { return x.id; }, settings.classes[0].id, function () {});
+      renderChips('homeworkCenter', settings.centers, function (x) { return x; }, function (x) { return x; }, settings.centers[0], function () { });
+      renderChips('homeworkClass', settings.classes, className, function (x) { return x.id; }, settings.classes[0].id, function () { });
       center.querySelectorAll('.chip').forEach(function (chip) { chip.onclick = function () { markActive(center, chip); }; });
       cls.querySelectorAll('.chip').forEach(function (chip) { chip.onclick = function () { markActive(cls, chip); }; });
       renderNoteTargets();
@@ -1226,11 +1589,11 @@
           window.saveNotification({ studentId: String(s.id), type: 'note', text: 'ملاحظة جديدة: ' + text })
         ]);
       })).then(function () {
-      document.getElementById('noteText').value = '';
-      document.getElementById('noteTarget').value = 'all';
-      document.getElementById('noteTargetPicker').textContent = 'كل الطلاب';
-      document.getElementById('noteStudentPicker').textContent = 'اختر طالباً للبحث';
-      window.mcToast('تم إرسال الملاحظة');
+        document.getElementById('noteText').value = '';
+        document.getElementById('noteTarget').value = 'all';
+        document.getElementById('noteTargetPicker').textContent = 'كل الطلاب';
+        document.getElementById('noteStudentPicker').textContent = 'اختر طالباً للبحث';
+        window.mcToast('تم إرسال الملاحظة');
       }).catch(function () { window.mcToast('تعذر حفظ الملاحظة، تحقق من اتصال Firebase'); });
     };
 
