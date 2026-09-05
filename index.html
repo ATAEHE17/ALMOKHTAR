@@ -7,11 +7,90 @@
     <title>تسجيل الدخول — منصة التعليم</title>
     <link rel="stylesheet" href="shared.css">
       <link rel="icon" type="image/png" href="almokhtar.png">
+    <style>
+        .login-page {
+            overflow: hidden;
+        }
+
+        .login-page .login-wrap {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .math-background {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .math-symbol {
+            position: absolute;
+            color: var(--accent-2);
+            opacity: .48;
+            font-family: Georgia, serif;
+            font-size: clamp(26px, 5vw, 58px);
+            font-weight: 700;
+            filter: saturate(1.2) brightness(.82);
+            animation: float-math 4s ease-in-out infinite;
+        }
+
+        .math-symbol:nth-child(1) { top: 7%; inset-inline-start: 6%; color: #F5A524; animation-delay: -2s; }
+        .math-symbol:nth-child(2) { top: 12%; inset-inline-end: 8%; color: #22C55E; animation-delay: -7s; }
+        .math-symbol:nth-child(3) { top: 31%; inset-inline-start: 4%; color: #38BDF8; animation-delay: -4s; }
+        .math-symbol:nth-child(4) { top: 38%; inset-inline-end: 6%; color: #F0475A; animation-delay: -6s; }
+        .math-symbol:nth-child(5) { top: 68%; inset-inline-start: 7%; color: #A78BFA; animation-delay: -3s; }
+        .math-symbol:nth-child(6) { top: 73%; inset-inline-end: 8%; color: #14B8A6; animation-delay: -1s; }
+        .math-symbol:nth-child(7) { bottom: 7%; inset-inline-start: 27%; color: #FB7185; animation-delay: -5s; }
+        .math-symbol:nth-child(8) { bottom: 8%; inset-inline-end: 27%; color: #FACC15; animation-delay: -8s; }
+        .math-symbol:nth-child(9) { top: 4%; inset-inline-start: 42%; color: #60A5FA; animation-delay: -1s; }
+        .math-symbol:nth-child(10) { bottom: 3%; inset-inline-end: 44%; color: #34D399; animation-delay: -6s; }
+        .math-symbol:nth-child(11) { top: 24%; inset-inline-start: 20%; color: #FB923C; animation-delay: -7s; }
+        .math-symbol:nth-child(12) { top: 29%; inset-inline-end: 24%; color: #F472B6; animation-delay: -3s; }
+        .math-symbol:nth-child(13) { bottom: 24%; inset-inline-start: 40%; color: #2DD4BF; animation-delay: -6s; }
+        .math-symbol:nth-child(14) { bottom: 18%; inset-inline-end: 39%; color: #60A5FA; animation-delay: -2s; }
+        .math-symbol:nth-child(15) { top: 55%; inset-inline-start: 20%; color: #A78BFA; animation-delay: -5s; }
+        .math-symbol:nth-child(16) { top: 62%; inset-inline-end: 19%; color: #FACC15; animation-delay: -1s; }
+
+        :root[data-theme="light"] .math-symbol {
+            opacity: .58;
+            filter: saturate(1.35) brightness(.7);
+        }
+
+        @keyframes float-math {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+            50% { transform: translate3d(10px, -18px, 0) rotate(8deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .math-symbol { animation: none; }
+        }
+    </style>
 
 </head>
 
-<body>
+<body class="login-page">
     <div class="login-wrap">
+        <div class="math-background" aria-hidden="true">
+            <span class="math-symbol">+</span>
+            <span class="math-symbol">&#x2211;</span>
+            <span class="math-symbol">&#x221E;</span>
+            <span class="math-symbol">&#x03C0;</span>
+            <span class="math-symbol">&#x0394;</span>
+            <span class="math-symbol">&#x221A;</span>
+            <span class="math-symbol">&#x03B8;</span>
+            <span class="math-symbol">&#x2248;</span>
+            <span class="math-symbol">&#x03A3;</span>
+            <span class="math-symbol">&#x222B;</span>
+            <span class="math-symbol">&#x2202;</span>
+            <span class="math-symbol">&#x03BB;</span>
+            <span class="math-symbol">&#x03B1;</span>
+            <span class="math-symbol">&#x03B2;</span>
+            <span class="math-symbol">&#x03C6;</span>
+            <span class="math-symbol">&#x03C9;</span>
+        </div>
         <div class="login-card card">
             <div class="hero">
                 <div class="brand-logo" id="loginLogo">م</div>
@@ -38,6 +117,11 @@
     <script>
         window.whenMCReady(() => {
             window.applyTheme();
+            const settings = window.getSettings();
+            const logo = document.getElementById('loginLogo');
+            if (settings && settings.logo) {
+                logo.innerHTML = '<img src="' + settings.logo + '" alt="شعار المنصة">';
+            }
         });
 
         function handleLogin() {
