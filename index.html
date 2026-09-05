@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>تسجيل الدخول — منصة التعليم</title>
     <link rel="stylesheet" href="shared.css">
-      <link rel="icon" type="image/png" href="almokhtar.png">
+    <link rel="icon" type="image/png" href="almokhtar.png">
     <style>
         .login-page {
             overflow: hidden;
@@ -26,8 +26,8 @@
 
         .teacher-image {
             position: absolute;
-            top: 22px;
-            left: -22px;
+            top: 27px;
+            left: -2px;
             width: 140px;
             height: auto;
             z-index: 5;
@@ -38,7 +38,7 @@
         @media (max-width: 480px) {
             .teacher-image {
                 width: 110px;
-                top: -80px;
+                top: -135px;
                 left: -12px;
             }
         }
@@ -62,22 +62,117 @@
             animation: float-math 4s ease-in-out infinite;
         }
 
-        .math-symbol:nth-child(1) { top: 7%; inset-inline-start: 6%; color: #F5A524; animation-delay: -2s; }
-        .math-symbol:nth-child(2) { top: 12%; inset-inline-end: 8%; color: #22C55E; animation-delay: -7s; }
-        .math-symbol:nth-child(3) { top: 31%; inset-inline-start: 4%; color: #38BDF8; animation-delay: -4s; }
-        .math-symbol:nth-child(4) { top: 38%; inset-inline-end: 6%; color: #F0475A; animation-delay: -6s; }
-        .math-symbol:nth-child(5) { top: 68%; inset-inline-start: 7%; color: #A78BFA; animation-delay: -3s; }
-        .math-symbol:nth-child(6) { top: 73%; inset-inline-end: 8%; color: #14B8A6; animation-delay: -1s; }
-        .math-symbol:nth-child(7) { bottom: 7%; inset-inline-start: 27%; color: #FB7185; animation-delay: -5s; }
-        .math-symbol:nth-child(8) { bottom: 8%; inset-inline-end: 27%; color: #FACC15; animation-delay: -8s; }
-        .math-symbol:nth-child(9) { top: 4%; inset-inline-start: 42%; color: #60A5FA; animation-delay: -1s; }
-        .math-symbol:nth-child(10) { bottom: 3%; inset-inline-end: 44%; color: #34D399; animation-delay: -6s; }
-        .math-symbol:nth-child(11) { top: 24%; inset-inline-start: 20%; color: #FB923C; animation-delay: -7s; }
-        .math-symbol:nth-child(12) { top: 29%; inset-inline-end: 24%; color: #F472B6; animation-delay: -3s; }
-        .math-symbol:nth-child(13) { bottom: 24%; inset-inline-start: 40%; color: #2DD4BF; animation-delay: -6s; }
-        .math-symbol:nth-child(14) { bottom: 18%; inset-inline-end: 39%; color: #60A5FA; animation-delay: -2s; }
-        .math-symbol:nth-child(15) { top: 55%; inset-inline-start: 20%; color: #A78BFA; animation-delay: -5s; }
-        .math-symbol:nth-child(16) { top: 62%; inset-inline-end: 19%; color: #FACC15; animation-delay: -1s; }
+        .math-symbol:nth-child(1) {
+            top: 7%;
+            inset-inline-start: 6%;
+            color: #F5A524;
+            animation-delay: -2s;
+        }
+
+        .math-symbol:nth-child(2) {
+            top: 12%;
+            inset-inline-end: 8%;
+            color: #22C55E;
+            animation-delay: -7s;
+        }
+
+        .math-symbol:nth-child(3) {
+            top: 31%;
+            inset-inline-start: 4%;
+            color: #38BDF8;
+            animation-delay: -4s;
+        }
+
+        .math-symbol:nth-child(4) {
+            top: 38%;
+            inset-inline-end: 6%;
+            color: #F0475A;
+            animation-delay: -6s;
+        }
+
+        .math-symbol:nth-child(5) {
+            top: 68%;
+            inset-inline-start: 7%;
+            color: #A78BFA;
+            animation-delay: -3s;
+        }
+
+        .math-symbol:nth-child(6) {
+            top: 73%;
+            inset-inline-end: 8%;
+            color: #14B8A6;
+            animation-delay: -1s;
+        }
+
+        .math-symbol:nth-child(7) {
+            bottom: 7%;
+            inset-inline-start: 27%;
+            color: #FB7185;
+            animation-delay: -5s;
+        }
+
+        .math-symbol:nth-child(8) {
+            bottom: 8%;
+            inset-inline-end: 27%;
+            color: #FACC15;
+            animation-delay: -8s;
+        }
+
+        .math-symbol:nth-child(9) {
+            top: 4%;
+            inset-inline-start: 42%;
+            color: #60A5FA;
+            animation-delay: -1s;
+        }
+
+        .math-symbol:nth-child(10) {
+            bottom: 3%;
+            inset-inline-end: 44%;
+            color: #34D399;
+            animation-delay: -6s;
+        }
+
+        .math-symbol:nth-child(11) {
+            top: 24%;
+            inset-inline-start: 20%;
+            color: #FB923C;
+            animation-delay: -7s;
+        }
+
+        .math-symbol:nth-child(12) {
+            top: 29%;
+            inset-inline-end: 24%;
+            color: #F472B6;
+            animation-delay: -3s;
+        }
+
+        .math-symbol:nth-child(13) {
+            bottom: 24%;
+            inset-inline-start: 40%;
+            color: #2DD4BF;
+            animation-delay: -6s;
+        }
+
+        .math-symbol:nth-child(14) {
+            bottom: 18%;
+            inset-inline-end: 39%;
+            color: #60A5FA;
+            animation-delay: -2s;
+        }
+
+        .math-symbol:nth-child(15) {
+            top: 55%;
+            inset-inline-start: 20%;
+            color: #A78BFA;
+            animation-delay: -5s;
+        }
+
+        .math-symbol:nth-child(16) {
+            top: 62%;
+            inset-inline-end: 19%;
+            color: #FACC15;
+            animation-delay: -1s;
+        }
 
         :root[data-theme="light"] .math-symbol {
             opacity: .58;
@@ -85,12 +180,80 @@
         }
 
         @keyframes float-math {
-            0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
-            50% { transform: translate3d(10px, -18px, 0) rotate(8deg); }
+
+            0%,
+            100% {
+                transform: translate3d(0, 0, 0) rotate(-8deg);
+            }
+
+            50% {
+                transform: translate3d(10px, -18px, 0) rotate(8deg);
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .math-symbol { animation: none; }
+            .math-symbol {
+                animation: none;
+            }
+        }
+
+
+
+        .first-boy-image {
+            position: absolute;
+            top: 93px;
+            left: 89px;
+            width: 140px;
+            height: auto;
+            z-index: 5;
+            pointer-events: none;
+            filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .25));
+        }
+
+        @media (max-width: 480px) {
+            .first-boy-image {
+                width: 110px;
+                top: -13589px;
+                left: -12px;
+            }
+        }
+
+        .second-boy-image {
+            position: absolute;
+            top: 9334px;
+            left: 89px;
+            width: 140px;
+            height: auto;
+            z-index: 5;
+            pointer-events: none;
+            filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .25));
+        }
+
+        @media (max-width: 480px) {
+            .second-boy-image {
+                width: 110px;
+                top: 130px;
+                left: -16px;
+            }
+        }
+
+        .third-boy-image {
+            position: absolute;
+            top: 9334px;
+            left: 89px;
+            width: 140px;
+            height: auto;
+            z-index: 5;
+            pointer-events: none;
+            filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .25));
+        }
+
+        @media (max-width: 480px) {
+            .third-boy-image {
+                width: 110px;
+                top: -27px;
+                left: 190px;
+            }
         }
     </style>
 
@@ -118,6 +281,11 @@
         </div>
         <div class="login-card card">
             <img src="khaled mokhtar.png" alt="الأستاذ المختار" class="teacher-image">
+            <img src="2boys.png" alt="الأستاذ المختار" class=" first-boy-image">
+            <img src="second boy.png" alt="الأستاذ المختار" class="second-boy-image">
+
+
+
             <div class="hero">
                 <div class="brand-logo" id="loginLogo">م</div>
                 <h2>تسجيل الدخول للمنصة</h2>
