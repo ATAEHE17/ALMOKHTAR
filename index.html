@@ -10,18 +10,90 @@
     <style>
         .login-page {
             overflow: hidden;
+            background: url('login bg.jpg') center center / cover no-repeat fixed;
+        }
+
+        .login-page::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(60, 6, 10, .25) 0%, rgba(50, 5, 8, .55) 55%, rgba(35, 3, 6, .8) 100%);
+            z-index: 0;
+            pointer-events: none;
         }
 
         .login-page .login-wrap {
             position: relative;
+            z-index: 1;
             overflow: hidden;
             isolation: isolate;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 20px 20px 56px;
         }
 
         .login-card {
             position: relative;
             overflow: visible;
-            margin-top: 90px;
+            margin-top: 0;
+            background: rgba(30, 5, 8, .38);
+            border: 1px solid rgba(255, 255, 255, .22);
+            backdrop-filter: blur(14px) saturate(140%);
+            -webkit-backdrop-filter: blur(14px) saturate(140%);
+            box-shadow: 0 10px 34px rgba(0, 0, 0, .45);
+        }
+
+        .login-page .field label {
+            color: rgba(255, 255, 255, .82);
+        }
+
+        .login-page .input {
+            background: rgba(0, 0, 0, .28);
+            border: 1.5px solid rgba(255, 255, 255, .25);
+            color: #fff;
+        }
+
+        .login-page .input::placeholder {
+            color: rgba(255, 255, 255, .55);
+        }
+
+        .login-page .input:focus {
+            border-color: rgba(255, 255, 255, .6);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, .12);
+        }
+
+        .login-page .btn-primary {
+            background: #fff;
+            color: #7A0D14;
+            box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .35);
+        }
+
+        .login-page .btn-primary:hover {
+            filter: brightness(.97);
+        }
+
+        /* ---------- tablet / desktop: use the pre-composed wide image directly ---------- */
+        @media (min-width: 700px) {
+            .login-page {
+                background: url('login-bg-wide.jpg') center / cover no-repeat fixed;
+            }
+
+            .login-page::before {
+                background: none;
+            }
+
+            .login-card {
+                background: rgba(20, 4, 7, .5);
+            }
+
+            .login-page .login-wrap {
+                justify-content: center;
+                align-items: flex-start;
+                padding: 40px 8% 40px 0;
+            }
         }
 
         .teacher-image {
@@ -179,6 +251,12 @@
             filter: saturate(1.35) brightness(.7);
         }
 
+        /* keep the floating math glyphs white against the red backdrop */
+        .math-symbol {
+            color: #fff !important;
+            filter: none;
+        }
+
         @keyframes float-math {
 
             0%,
@@ -202,7 +280,7 @@
         .first-boy-image {
             position: absolute;
             top: 93px;
-            left: 89px;
+            left: 1px;
             width: 140px;
             height: auto;
             z-index: 5;
@@ -280,7 +358,6 @@
             <span class="math-symbol">&#x03C9;</span>
         </div>
         <div class="login-card card">
-            <img src="khaled mokhtar.png" alt="الأستاذ المختار" class="teacher-image">
             <img src="2boys.png" alt="الأستاذ المختار" class=" first-boy-image">
             <img src="second boy.png" alt="الأستاذ المختار" class="second-boy-image">
 
