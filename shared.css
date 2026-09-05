@@ -59,6 +59,7 @@ body {
 
 body {
     margin: 0;
+    position: relative;
     background:
         radial-gradient(1200px 600px at 15% -10%, var(--accent-soft), transparent 60%),
         var(--bg);
@@ -68,6 +69,61 @@ body {
     line-height: 1.55;
     min-height: 100dvh;
     transition: background .25s ease, color .25s ease;
+}
+
+.page-math-background {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.page-math-background .math-symbol {
+    position: absolute;
+    color: var(--accent-2);
+    opacity: .2;
+    font-family: Georgia, serif;
+    font-size: clamp(24px, 4vw, 54px);
+    font-weight: 700;
+    filter: saturate(1.15) brightness(.84);
+    animation: shared-float-math 4s ease-in-out infinite;
+}
+
+.page-math-background .math-symbol:nth-child(1) { top: 8%; inset-inline-start: 5%; color: #F5A524; animation-delay: -2s; }
+.page-math-background .math-symbol:nth-child(2) { top: 16%; inset-inline-end: 7%; color: #22C55E; animation-delay: -7s; }
+.page-math-background .math-symbol:nth-child(3) { top: 42%; inset-inline-start: 3%; color: #38BDF8; animation-delay: -4s; }
+.page-math-background .math-symbol:nth-child(4) { top: 52%; inset-inline-end: 5%; color: #F0475A; animation-delay: -6s; }
+.page-math-background .math-symbol:nth-child(5) { bottom: 12%; inset-inline-start: 8%; color: #A78BFA; animation-delay: -3s; }
+.page-math-background .math-symbol:nth-child(6) { bottom: 9%; inset-inline-end: 9%; color: #14B8A6; animation-delay: -1s; }
+.page-math-background .math-symbol:nth-child(7) { top: 72%; inset-inline-start: 29%; color: #FB7185; animation-delay: -5s; }
+.page-math-background .math-symbol:nth-child(8) { top: 5%; inset-inline-end: 35%; color: #FACC15; animation-delay: -8s; }
+.page-math-background .math-symbol:nth-child(9) { top: 27%; inset-inline-start: 17%; color: #60A5FA; animation-delay: -1s; }
+.page-math-background .math-symbol:nth-child(10) { top: 34%; inset-inline-end: 20%; color: #34D399; animation-delay: -5s; }
+.page-math-background .math-symbol:nth-child(11) { bottom: 26%; inset-inline-start: 22%; color: #FB923C; animation-delay: -7s; }
+.page-math-background .math-symbol:nth-child(12) { bottom: 20%; inset-inline-end: 25%; color: #F472B6; animation-delay: -3s; }
+.page-math-background .math-symbol:nth-child(13) { top: 61%; inset-inline-start: 42%; color: #A78BFA; animation-delay: -6s; }
+.page-math-background .math-symbol:nth-child(14) { top: 18%; inset-inline-start: 47%; color: #2DD4BF; animation-delay: -2s; }
+
+:root[data-theme="light"] .page-math-background .math-symbol {
+    opacity: .38;
+    filter: saturate(1.45) brightness(.62);
+}
+
+@keyframes shared-float-math {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+    50% { transform: translate3d(10px, -18px, 0) rotate(8deg); }
+}
+
+.shell,
+.shell-wide,
+.student-full-page {
+    position: relative;
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-math-background .math-symbol { animation: none; }
 }
 
 html[dir="ltr"] body {
