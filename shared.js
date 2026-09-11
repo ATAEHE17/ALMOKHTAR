@@ -236,7 +236,8 @@ window.resetAllData = function () {
   return Promise.all([
     remove(ref(db, 'students')),
     remove(ref(db, 'attendance')),
-    remove(ref(db, 'grades'))
+    remove(ref(db, 'grades')),
+    remove(ref(db, 'homework'))
   ]);
 };
 
@@ -276,7 +277,7 @@ var MC_DICT = {
     gradeDeleted: 'تم حذف الدرجة', tapToToggle: 'اضغط للتبديل', outOf: 'من',
     studentPassword: 'كلمة المرور', createPassword: 'إنشاء كلمة مرور', confirmPassword: 'تأكيد كلمة المرور',
     passwordMismatch: 'كلمتا المرور غير متطابقتين',
-    dangerZone: 'منطقة خطرة', resetData: 'تصفير بيانات الطلاب', resetDataDesc: 'حذف كل الطلاب والدرجات وسجل الحضور نهائياً لبدء دورة أو عام دراسي جديد من الصفر (لن يتأثر اسم المنصة أو السناتر أو الصفوف)',
+    dangerZone: 'منطقة خطرة', resetData: 'تصفير بيانات الطلاب', resetDataDesc: 'حذف كل الطلاب والدرجات وسجل الحضور والواجبات نهائياً لبدء دورة أو عام دراسي جديد من الصفر (لن يتأثر اسم المنصة أو السناتر أو الصفوف)',
     resetDataConfirm: 'سيتم حذف جميع بيانات الطلاب والحضور والدرجات نهائياً ولا يمكن التراجع عن هذا الإجراء. هل أنت متأكد من المتابعة؟',
     resetDataConfirm2: 'تأكيد أخير: هل تريد فعلاً حذف كل شيء؟ لا يمكن التراجع بعد ذلك.',
     resetDataDone: 'تم تصفير جميع البيانات بنجاح'
@@ -315,7 +316,7 @@ var MC_DICT = {
     gradeDeleted: 'Grade deleted', tapToToggle: 'Tap to toggle', outOf: 'of',
     studentPassword: 'Password', createPassword: 'Create password', confirmPassword: 'Confirm password',
     passwordMismatch: 'Passwords do not match',
-    dangerZone: 'Danger zone', resetData: 'Reset student data', resetDataDesc: 'Permanently deletes all students, grades and attendance records to start a new term/year from scratch (platform name, centers and classes are kept)',
+    dangerZone: 'Danger zone', resetData: 'Reset student data', resetDataDesc: 'Permanently deletes all students, grades, attendance and homework records to start a new term/year from scratch (platform name, centers and classes are kept)',
     resetDataConfirm: 'This will permanently delete all students, attendance and grades. This action cannot be undone. Are you sure you want to continue?',
     resetDataConfirm2: 'Final confirmation: do you really want to delete everything? This cannot be undone.',
     resetDataDone: 'All data was reset successfully'
