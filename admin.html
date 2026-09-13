@@ -481,6 +481,69 @@
       font-size: 12px;
     }
 
+    .detail-item.status-present {
+      border-color: #1e7e42;
+      background: rgba(30, 126, 66, .16);
+      color: #4bd07d;
+    }
+
+    .detail-item.status-absent {
+      border-color: #a3273a;
+      background: rgba(163, 39, 58, .16);
+      color: #ef5a72;
+    }
+
+    .detail-month-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-2);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .detail-month-item:hover {
+      border-color: var(--accent);
+    }
+
+    .detail-month-counts {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .detail-month-counts .c-present {
+      color: #4bd07d;
+    }
+
+    .detail-month-counts .c-absent {
+      color: #ef5a72;
+    }
+
+    .detail-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--card-2);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      width: fit-content;
+      margin-bottom: 4px;
+    }
+
+    .detail-back-btn:hover {
+      border-color: var(--accent);
+    }
+
     .message-form {
       margin-top: 16px;
     }
@@ -1250,7 +1313,7 @@
     function renderTable() {
       document.getElementById('tableGroupLabel').textContent = setupCenter + ' · ' + className(setupClass);
       var students = window.getStudents().filter(function (s) { return (s.center || '').trim() === setupCenter.trim() && s.classId === setupClass.id; });
-      var today = new Date().toISOString().slice(0, 10);
+      var today = window.localDateStr();
       var attendance = window.getAttendance();
 
       var list = document.getElementById('tableList');
@@ -1342,7 +1405,7 @@
       // present students no longer receive an attendance-confirmation text,
       // since parents mainly care about being notified when their child was
       // absent.
-      var today = new Date().toISOString().slice(0, 10);
+      var today = window.localDateStr();
       var students = window.getStudents().filter(function (s) { return (s.center || '').trim() === setupCenter.trim() && s.classId === setupClass.id; });
       var attendance = window.getAttendance();
       var month = window.t('months')[new Date().getMonth()];
@@ -1441,7 +1504,8 @@
       });
     }
 
-    var detailStudentId = null, detailMode = 'attendance';
+    var detailStudentId = null, detailMode = 'attendance', detailMonthFilter = null;
+    var ARABIC_MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
     function openStudentDetail(studentId) {
       detailStudentId = studentId;
       document.getElementById('detailStudentTitle').textContent = window.getStudentById(studentId).name;
@@ -1450,18 +1514,77 @@
     }
     window.showStudentDetail = function (mode) {
       detailMode = mode;
+      detailMonthFilter = null;
+      if (mode === 'attendance') { renderAttendanceMonths(); }
+      else { renderGradesList(); }
+    };
+
+    // Attendance is grouped by month so a busy record doesn't turn into one
+    // long scroll: tapping a month drills into that month's day-by-day list.
+    function renderAttendanceMonths() {
       var list = document.getElementById('studentDetailList');
       list.innerHTML = '';
-      var items = mode === 'attendance' ? window.getAttendanceForStudent(detailStudentId) : window.getGradesForStudent(detailStudentId);
+      var items = window.getAttendanceForStudent(detailStudentId);
+      if (!items.length) { list.innerHTML = '<div class="detail-item">لا توجد سجلات بعد</div>'; return; }
+
+      var byMonth = {};
+      items.forEach(function (item) {
+        var key = (item.date || '').slice(0, 7); // 'YYYY-MM'
+        if (!byMonth[key]) byMonth[key] = [];
+        byMonth[key].push(item);
+      });
+
+      Object.keys(byMonth).sort().reverse().forEach(function (key) {
+        var parts = key.split('-');
+        var monthName = ARABIC_MONTHS[parseInt(parts[1], 10) - 1] + ' ' + parts[0];
+        var records = byMonth[key];
+        var present = records.filter(function (r) { return r.status === 'present'; }).length;
+        var absent = records.filter(function (r) { return r.status === 'absent'; }).length;
+
+        var row = document.createElement('div');
+        row.className = 'detail-month-item';
+        row.innerHTML = '<span>' + monthName + '</span>' +
+          '<span class="detail-month-counts"><span class="c-present">' + present + ' حاضر</span> · <span class="c-absent">' + absent + ' غائب</span></span>';
+        row.addEventListener('click', function () {
+          detailMonthFilter = key;
+          renderAttendanceMonthDetail(key);
+        });
+        list.appendChild(row);
+      });
+    }
+
+    function renderAttendanceMonthDetail(monthKey) {
+      var list = document.getElementById('studentDetailList');
+      list.innerHTML = '';
+
+      var back = document.createElement('div');
+      back.className = 'detail-back-btn';
+      back.textContent = '← رجوع لكل الشهور';
+      back.addEventListener('click', function () { detailMonthFilter = null; renderAttendanceMonths(); });
+      list.appendChild(back);
+
+      var items = window.getAttendanceForStudent(detailStudentId).filter(function (item) {
+        return (item.date || '').slice(0, 7) === monthKey;
+      });
+      items.forEach(function (item) {
+        var el = document.createElement('div');
+        el.className = 'detail-item ' + (item.status === 'present' ? 'status-present' : 'status-absent');
+        el.textContent = item.date + ' · ' + (item.status === 'present' ? 'حاضر' : 'غائب') + (item.details && item.details.length ? ' · ' + item.details.join('، ') : '');
+        list.appendChild(el);
+      });
+    }
+
+    function renderGradesList() {
+      var list = document.getElementById('studentDetailList');
+      list.innerHTML = '';
+      var items = window.getGradesForStudent(detailStudentId);
       if (!items.length) { list.innerHTML = '<div class="detail-item">لا توجد سجلات بعد</div>'; return; }
       items.forEach(function (item) {
         var el = document.createElement('div'); el.className = 'detail-item';
-        el.textContent = mode === 'attendance'
-          ? item.date + ' · ' + (item.status === 'present' ? 'حاضر' : 'غائب') + (item.details && item.details.length ? ' · ' + item.details.join('، ') : '')
-          : item.examName + ' · ' + item.score + '/' + item.maxScore + ' · ' + (item.date || '');
+        el.textContent = item.examName + ' · ' + item.score + '/' + item.maxScore + ' · ' + (item.date || '');
         list.appendChild(el);
       });
-    };
+    }
     window.removeDetailStudent = function () {
       if (!detailStudentId) return;
       var idToDelete = detailStudentId;
