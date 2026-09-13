@@ -124,11 +124,27 @@ window.togglePaid = function (studentId) {
   return s;
 };
 
+/* ---------------- dates ---------------- */
+// new Date().toISOString() reports the date in UTC. In a timezone ahead
+// of UTC (like Egypt, UTC+2/+3), that means for the first couple of
+// hours after local midnight, toISOString() still reports YESTERDAY's
+// date — so a record saved right after local midnight, or a same-day
+// check run shortly after, disagreed with what the calendar actually
+// showed the admin. This builds the date string from local calendar
+// fields instead, so it always matches the admin's own clock.
+window.localDateStr = function (d) {
+  d = d || new Date();
+  var y = d.getFullYear();
+  var m = String(d.getMonth() + 1).padStart(2, '0');
+  var day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+};
+
 /* ---------------- attendance ---------------- */
 window.getAttendance = function () { return window._mcCache.attendance || []; };
 
 window.markAttendance = function (studentId, status, dateStr, details) {
-  var date = dateStr || new Date().toISOString().slice(0, 10);
+  var date = dateStr || window.localDateStr();
   var list = window.getAttendance();
   var existing = list.find(function (a) { return a.studentId === studentId && a.date === date; });
   if (existing) {
