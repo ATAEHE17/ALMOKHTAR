@@ -226,7 +226,14 @@ window.deleteStudent = function (studentId) {
 
 window.getGradesForStudent = function (studentId) {
   return window.getGrades().filter(function (g) { return g.studentId === studentId; })
-    .sort(function (a, b) { return (b.date || '').localeCompare(a.date || ''); });
+    .sort(function (a, b) {
+      // Newest first: compare by date, then break ties on the Firebase push
+      // key (which is itself chronological), so grades entered the same day
+      // still come out in true creation order instead of insertion order.
+      var byDate = (b.date || '').localeCompare(a.date || '');
+      if (byDate !== 0) return byDate;
+      return (b.id || '').localeCompare(a.id || '');
+    });
 };
 
 // Overall percentage = total points earned / total points possible across
