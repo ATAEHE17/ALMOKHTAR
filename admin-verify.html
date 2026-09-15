@@ -163,6 +163,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="shared.js"></script>
     <script>
+        // إلغاء سطر "Created by..." في صفحة التأكيد فقط (باقي الصفحات زي ما هي)
+        (function () {
+            function killCredit() {
+                var el = document.getElementById('mcSiteCredit');
+                if (el && el.parentNode) el.parentNode.removeChild(el);
+                document.querySelectorAll('.mc-site-credit').forEach(function (n) {
+                    if (n.parentNode) n.parentNode.removeChild(n);
+                });
+            }
+            window.renderSiteCredit = function () { };
+            killCredit();
+            document.addEventListener('DOMContentLoaded', killCredit);
+            window.addEventListener('load', killCredit);
+        })();
+
         window.applyCachedAccent();
         window.initEmailJS();
 
