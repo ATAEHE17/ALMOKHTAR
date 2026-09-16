@@ -390,6 +390,29 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="shared.js"></script>
     <script>
+        // Belt-and-braces fix for "back button shows the login page again":
+        // no matter how the browser ended up showing index.html — the back
+        // button, a bookmark, a bfcache restore, a second tab, typing the
+        // URL again — if there's already a valid session, never show the
+        // login form. Bounce straight to the right page instead.
+        (function () {
+            function redirectIfAlreadyLoggedIn() {
+                var existingSession = window.getSession ? window.getSession() : null;
+                if (existingSession && existingSession.role === 'admin') {
+                    window.location.replace('admin.html');
+                } else if (existingSession && existingSession.role === 'student') {
+                    window.location.replace('studenti.html');
+                }
+            }
+            redirectIfAlreadyLoggedIn();
+            // Some mobile browsers restore a cached snapshot of this page on
+            // back/forward (bfcache) without re-running the script above —
+            // 'pageshow' fires in that case too, so check again there.
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) redirectIfAlreadyLoggedIn();
+            });
+        })();
+
         window.applyCachedAccent();
         window.initEmailJS();
 
