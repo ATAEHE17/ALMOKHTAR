@@ -1040,7 +1040,7 @@
     <!-- ATTENDANCE TABLE -->
     <div class="section" id="section-table">
       <div class="row-between" style="margin-bottom:14px;">
-        <button class="icon-btn" onclick="switchTab('setup')" aria-label="back">
+        <button class="icon-btn" onclick="history.back()" aria-label="back">
           <svg class="flip-rtl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
@@ -1510,7 +1510,10 @@
     }
     window.closeAllModals = closeAllModals;
 
-    function switchTab(name) {
+    // Pure UI update — no browser-history side effects. Used for normal
+    // (forward) tab switches and to restore a tab when the back
+    // button/swipe gesture fires (see the popstate listener below).
+    function renderTab(name) {
       closeAllModals();
       document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === name); });
       document.querySelectorAll('[data-bottom-tab]').forEach(function (t) { t.classList.toggle('active', t.dataset.bottomTab === name); });
@@ -1523,7 +1526,24 @@
       if (name === 'grades') { populateGradeStudentSelect(); renderGrades(); }
       if (name === 'setup') { renderUnpaidSection(); renderAdminLeaderboard(); }
     }
+
+    // Tabs used to be plain show/hide with no browser-history entry, so
+    // pressing back — or the Android edge swipe-back gesture — skipped
+    // straight past them to whatever page was open before admin.html,
+    // i.e. the login page. We now push a real history entry per tab so
+    // back steps through the app's own screens first, one at a time.
+    history.replaceState({ adminTab: 'setup' }, '');
+
+    function switchTab(name) {
+      renderTab(name);
+      history.pushState({ adminTab: name }, '');
+    }
     window.switchTab = switchTab;
+
+    window.addEventListener('popstate', function (event) {
+      var name = (event.state && event.state.adminTab) || 'setup';
+      renderTab(name);
+    });
 
     window.goToTable = function () {
       switchTab('table');
@@ -2637,7 +2657,7 @@
 
     window.doLogout = function () {
       window.clearSession();
-      window.location.href = 'index.html';
+      window.location.replace('index.html');
     };
 
     window.whenMCReady(function () {
