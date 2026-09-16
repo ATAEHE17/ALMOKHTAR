@@ -683,6 +683,25 @@ window.mcToast = function (message) {
   }, 2200);
 };
 
+/* ---------- topbar hamburger menu (theme / language / logout) ---------- */
+window.toggleTopbarMenu = function (event) {
+  if (event) event.stopPropagation();
+  var panel = document.getElementById('topbarMenuPanel');
+  if (panel) panel.classList.toggle('open');
+};
+window.closeTopbarMenu = function () {
+  var panel = document.getElementById('topbarMenuPanel');
+  if (panel) panel.classList.remove('open');
+};
+/* Close the menu on any click outside it (its own button included, since
+   toggleTopbarMenu already handles opening/closing on that click). */
+document.addEventListener('click', function (event) {
+  var panel = document.getElementById('topbarMenuPanel');
+  if (panel && panel.classList.contains('open') && !panel.contains(event.target)) {
+    panel.classList.remove('open');
+  }
+});
+
 window.openModal = function (id) {
   var modal = document.getElementById(id);
   if (modal) modal.classList.add('open');
