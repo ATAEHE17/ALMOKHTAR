@@ -1941,7 +1941,7 @@
           <button class="icon-btn" onclick="toggleLang()" aria-label="lang"><span id="langLabel"
               style="font-weight:800; font-size:12px;">EN</span></button>
           <span class="topbar-divider"></span>
-          <button class="icon-btn topbar-logout-btn" onclick="doLogout()" aria-label="logout">
+          <button class="icon-btn topbar-logout-btn" onclick="openModal('logoutConfirmModal')" aria-label="logout">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
               <path d="M16 17l5-5-5-5" />
@@ -2291,6 +2291,20 @@
       </div>
     </div>
   </div>
+  <div class="overlay" id="logoutConfirmModal">
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title" data-t="logout">خروج</span><button class="modal-close"
+          onclick="closeModal('logoutConfirmModal')">&times;</button></div>
+      <p style="color:var(--text-dim); font-size:14px; line-height:1.6; margin:0 0 20px;" data-t="logoutConfirmMsg">
+        هل أنت متأكد أنك تريد تسجيل الخروج؟</p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('logoutConfirmModal')"
+          data-t="cancel">إلغاء</button>
+        <button type="button" class="btn btn-bad" onclick="doLogout()" data-t="logout">خروج</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="notificationsModal">
     <div class="modal">
       <div class="modal-head"><span class="modal-title">الإشعارات</span><button class="modal-close"
