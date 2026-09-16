@@ -982,8 +982,10 @@
       top: calc(100% + 10px);
       inset-inline-end: 0;
       min-width: 190px;
-      background: var(--card);
-      border: 1px solid var(--line);
+      background: color-mix(in srgb, var(--card) 65%, transparent);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-2);
       padding: 6px;
@@ -1012,7 +1014,7 @@
     }
 
     .topbar-menu-item:hover {
-      background: var(--card-2);
+      background: color-mix(in srgb, var(--card-2) 70%, transparent);
     }
 
     .topbar-menu-item svg {
@@ -1024,6 +1026,7 @@
     /* Thin, low-contrast separator before the logout row — present but not
        attention-grabbing. */
     .topbar-menu-divider {
+      display: block;
       height: 1px;
       margin: 6px 4px;
       background: var(--line);
@@ -1035,7 +1038,7 @@
     }
 
     .topbar-menu-item-logout:hover {
-      background: var(--bad-soft);
+      background: color-mix(in srgb, var(--bad-soft) 80%, transparent);
     }
 
     .notification-count {
@@ -2433,6 +2436,24 @@
   <script type="module" src="firebase.js"></script>
   <script src="shared.js"></script>
   <script>
+    // Defined here (not only in shared.js) so the topbar hamburger menu
+    // always works on this page even if an older shared.js is cached.
+    window.toggleTopbarMenu = function (event) {
+      if (event) event.stopPropagation();
+      var panel = document.getElementById('topbarMenuPanel');
+      if (panel) panel.classList.toggle('open');
+    };
+    window.closeTopbarMenu = function () {
+      var panel = document.getElementById('topbarMenuPanel');
+      if (panel) panel.classList.remove('open');
+    };
+    document.addEventListener('click', function (event) {
+      var panel = document.getElementById('topbarMenuPanel');
+      if (panel && panel.classList.contains('open') && !panel.contains(event.target)) {
+        panel.classList.remove('open');
+      }
+    });
+
     if (typeof window.applyTheme === 'function') window.applyTheme();
     if (typeof window.applyCachedAccent === 'function') window.applyCachedAccent();
     window.applyLangDir();
