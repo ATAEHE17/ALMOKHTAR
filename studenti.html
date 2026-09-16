@@ -1978,7 +1978,7 @@
 
   <section class="student-full-page" id="studentGradesPage" aria-labelledby="studentGradesPageTitle">
     <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('home')" aria-label="back">&rarr;</button>
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentGradesPageTitle">سجل الدرجات</h2>
     </div>
     <div class="card student-full-page-body" id="studentGradesPageList"></div>
@@ -1986,7 +1986,7 @@
 
   <section class="student-full-page" id="studentHomeworkPage" aria-labelledby="studentHomeworkPageTitle">
     <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('menu')" aria-label="back">&rarr;</button>
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentHomeworkPageTitle">الواجبات</h2>
     </div>
     <div class="student-full-page-body" id="studentHomeworkPageList"></div>
@@ -1994,7 +1994,7 @@
 
   <section class="student-full-page" id="studentAttendancePage" aria-labelledby="studentAttendancePageTitle">
     <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('home')" aria-label="back">&rarr;</button>
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentAttendancePageTitle">سجل الحضور الشهري</h2>
     </div>
     <div class="student-full-page-body" id="studentAttendancePageList"></div>
@@ -2002,7 +2002,7 @@
 
   <section class="student-full-page" id="studentNotesPage" aria-labelledby="studentNotesPageTitle">
     <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('menu')" aria-label="back">&rarr;</button>
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentNotesPageTitle">سجل الملاحظات</h2>
     </div>
     <div class="student-full-page-body" id="studentNotesPageList"></div>
@@ -2010,7 +2010,7 @@
 
   <section class="student-full-page" id="studentMenuPage" aria-labelledby="studentMenuPageTitle">
     <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('home')" aria-label="back">&rarr;</button>
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentMenuPageTitle">القائمة</h2>
     </div>
     <div class="student-menu-grid">
@@ -2080,7 +2080,7 @@
 
   <section class="student-full-page" id="studentTodoPage" aria-labelledby="studentTodoPageTitle">
     <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('menu')" aria-label="back">&rarr;</button>
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentTodoPageTitle">قائمة المهام</h2>
     </div>
     <div class="todo-add-row">
@@ -2092,7 +2092,7 @@
 
   <section class="student-full-page" id="studentLeaderboardPage" aria-labelledby="studentLeaderboardPageTitle">
     <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('menu')" aria-label="back">&rarr;</button>
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentLeaderboardPageTitle">لوحة الصدارة</h2>
     </div>
     <p class="muted" style="font-size:12.5px; margin-bottom:14px;">الترتيب داخل صفك بناءً على الدرجات والحضور</p>
@@ -2330,7 +2330,11 @@
       });
     }
 
-    window.showStudentSection = function (section) {
+    // Pure UI update — shows the requested section, no browser-history
+    // side effects. Used both for normal (forward) navigation and when
+    // the back button/swipe gesture asks us to restore a section (see
+    // the popstate listener below).
+    function renderStudentSection(section) {
       var shell = document.querySelector('.student-page .shell');
       var pages = ['grades', 'attendance', 'notes', 'menu', 'todo', 'homework', 'leaderboard'];
       setStudentNavActive(section);
@@ -2346,7 +2350,25 @@
         page.classList.toggle('open', name === section);
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Internal sections (grades, notes, menu, ...) used to be plain
+    // show/hide with no browser-history entry, so pressing back — or the
+    // Android edge swipe-back gesture — skipped straight past them to
+    // whatever page was open before studenti.html, i.e. the login page.
+    // We now push a real history entry per section so back steps through
+    // the app's own screens first, one at a time, like any normal app.
+    history.replaceState({ studentSection: 'home' }, '');
+
+    window.showStudentSection = function (section) {
+      renderStudentSection(section);
+      history.pushState({ studentSection: section }, '');
     };
+
+    window.addEventListener('popstate', function (event) {
+      var section = (event.state && event.state.studentSection) || 'home';
+      renderStudentSection(section);
+    });
 
     function renderProfile() {
       document.getElementById('profAvatar').innerHTML = student.avatar ? '<img src="' + student.avatar + '">' : window.initials(student.name);
