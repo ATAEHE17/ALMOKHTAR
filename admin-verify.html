@@ -102,12 +102,6 @@
             opacity: .5;
         }
 
-        /* سطر "Created by..." متخفي في صفحة التأكيد بس */
-        #mcSiteCredit,
-        .mc-site-credit {
-            display: none !important;
-        }
-
         .hero {
             text-align: center;
             margin-bottom: 18px;
@@ -163,21 +157,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="shared.js"></script>
     <script>
-        // إلغاء سطر "Created by..." في صفحة التأكيد فقط (باقي الصفحات زي ما هي)
-        (function () {
-            function killCredit() {
-                var el = document.getElementById('mcSiteCredit');
-                if (el && el.parentNode) el.parentNode.removeChild(el);
-                document.querySelectorAll('.mc-site-credit').forEach(function (n) {
-                    if (n.parentNode) n.parentNode.removeChild(n);
-                });
-            }
-            window.renderSiteCredit = function () { };
-            killCredit();
-            document.addEventListener('DOMContentLoaded', killCredit);
-            window.addEventListener('load', killCredit);
-        })();
-
         window.applyCachedAccent();
         window.initEmailJS();
 
@@ -271,7 +250,10 @@
                 window.updateAdminSession(pendingDeviceId);
                 window.setSession({ role: 'admin', deviceId: pendingDeviceId });
                 sessionStorage.removeItem('mc_pending_admin_device');
-                window.location.href = 'admin.html';
+                // replace (not href) so the verify/login pages aren't left
+                // sitting in browser history — back from admin.html
+                // shouldn't be able to return to them.
+                window.location.replace('admin.html');
             }).catch((e) => {
                 console.error(e);
                 btn.disabled = false;
