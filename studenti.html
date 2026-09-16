@@ -936,6 +936,41 @@
       position: relative;
     }
 
+    /* Groups the theme/language toggles and the logout button into one
+       pill instead of three separate floating buttons. */
+    .topbar-toggle-group {
+      display: flex;
+      align-items: center;
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      border-radius: 13px;
+      overflow: hidden;
+    }
+
+    .topbar-toggle-group .icon-btn {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    /* Thin, low-contrast separator between the toggles and the logout
+       button — present but not attention-grabbing. */
+    .topbar-divider {
+      width: 1px;
+      align-self: stretch;
+      margin: 9px 0;
+      background: var(--line);
+      opacity: .7;
+    }
+
+    .topbar-logout-btn {
+      color: var(--bad);
+    }
+
+    .topbar-logout-btn:hover {
+      color: var(--bad);
+    }
+
     .notification-count {
       position: absolute;
       top: -4px;
@@ -1896,14 +1931,24 @@
             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
           </svg><span class="notification-count" id="notificationCount" style="display:none"></span></button>
-        <button class="icon-btn" onclick="toggleTheme()" aria-label="theme">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 3v1M12 20v1M4.2 4.2l.7.7M18.4 18.4l.7.7M3 12h1M20 12h1M4.2 19.8l.7-.7M18.4 5.6l.7-.7" />
-            <circle cx="12" cy="12" r="4.5" />
-          </svg>
-        </button>
-        <button class="icon-btn" onclick="toggleLang()" aria-label="lang"><span id="langLabel"
-            style="font-weight:800; font-size:12px;">EN</span></button>
+        <div class="topbar-toggle-group">
+          <button class="icon-btn" onclick="toggleTheme()" aria-label="theme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3v1M12 20v1M4.2 4.2l.7.7M18.4 18.4l.7.7M3 12h1M20 12h1M4.2 19.8l.7-.7M18.4 5.6l.7-.7" />
+              <circle cx="12" cy="12" r="4.5" />
+            </svg>
+          </button>
+          <button class="icon-btn" onclick="toggleLang()" aria-label="lang"><span id="langLabel"
+              style="font-weight:800; font-size:12px;">EN</span></button>
+          <span class="topbar-divider"></span>
+          <button class="icon-btn topbar-logout-btn" onclick="doLogout()" aria-label="logout">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <path d="M16 17l5-5-5-5" />
+              <path d="M21 12H9" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2308,6 +2353,13 @@
 
     var session = window.getSession();
     if (!session || session.role !== 'student') { window.location.href = 'index.html'; }
+
+    window.doLogout = function () {
+      window.clearSession();
+      // replace (not href) so the login page doesn't end up sitting on
+      // top of an already-logged-out session in browser history.
+      window.location.replace('index.html');
+    };
 
     var settings, student;
 
