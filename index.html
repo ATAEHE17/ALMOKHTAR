@@ -437,7 +437,10 @@
 
             window.createAndSendAdminOTP(deviceId).then(() => {
                 sessionStorage.setItem('mc_pending_admin_device', deviceId);
-                window.location.href = 'admin-verify.html';
+                // replace (not href) so the login page isn't left sitting in
+                // browser history — back from the verify page shouldn't be
+                // able to return to it.
+                window.location.replace('admin-verify.html');
             }).catch((e) => {
                 console.error(e);
                 if (btn) { btn.disabled = false; btn.textContent = 'تسجيل الدخول'; }
@@ -507,7 +510,10 @@
 
             window.updateStudentSession(student.id, deviceId);
             window.setSession({ role: 'student', studentId: student.id, deviceId: deviceId });
-            window.location.href = 'studenti.html';
+            // replace (not href) so the login page isn't left sitting in
+            // browser history — pressing back after logging in shouldn't
+            // be able to bring it back up.
+            window.location.replace('studenti.html');
         }
     </script>
 </body>
