@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" href="almokhtar.png">
 
   <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Tajawal:wght@400;500;700&family=Amiri:wght@400;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
   <style>
@@ -1461,6 +1461,95 @@
       min-height: 44px;
     }
 
+    /* ---------- note composer (my notes) ---------- */
+    .note-composer {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .note-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .note-toolbar-select {
+      flex: 1;
+      min-width: 96px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--card-2);
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .note-toolbar-bold {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--card-2);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .note-toolbar-bold.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-2);
+    }
+
+    .note-composer textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-2);
+      color: var(--text);
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .note-add-btn {
+      align-self: flex-end;
+      padding: 8px 22px;
+      font-size: 13px;
+    }
+
+    /* ---------- notebook-style full note view ---------- */
+    .notebook-paper {
+      position: relative;
+      min-height: 320px;
+      padding: 20px 40px 20px 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background-color: var(--card-2);
+      background-image: repeating-linear-gradient(var(--card-2) 0px, var(--card-2) 27px, var(--line) 28px);
+      background-size: 100% 28px;
+      line-height: 28px;
+      font-size: 15px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow: hidden;
+    }
+
+    .notebook-paper::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 26px;
+      width: 1px;
+      background: rgba(220, 60, 70, .4);
+    }
+
     .my-notes-item {
       display: flex;
       align-items: flex-start;
@@ -1470,6 +1559,7 @@
       border: 1px solid var(--line);
       border-radius: 14px;
       background: var(--card-2);
+      cursor: pointer;
     }
 
     .my-notes-item-text {
@@ -2462,11 +2552,36 @@
       <h2 id="studentMynotesPageTitle" data-t="myNotesLabel">ملاحظاتي</h2>
     </div>
     <p class="muted" style="font-size:12.5px; margin-bottom:14px;" data-t="myNotesDesc">دوّن أي ملاحظة تحب ترجع لها بعدين، زي وقت الحصة مثلاً</p>
-    <div class="todo-add-row">
-      <textarea id="myNoteInput" rows="2" placeholder="اكتب ملاحظة..." data-t-ph="typeNewNote"></textarea>
-      <button type="button" class="btn btn-primary" onclick="addMyNote()" data-t="addLabel">إضافة</button>
+    <div class="note-composer">
+      <div class="note-toolbar">
+        <select id="myNoteFont" class="note-toolbar-select" onchange="applyMyNoteComposerStyle()">
+          <option value="inherit">الخط الافتراضي</option>
+          <option value="'Tajawal', sans-serif">تجوال</option>
+          <option value="'Amiri', serif">كلاسيكي</option>
+          <option value="'Courier New', monospace">مسافة ثابتة</option>
+          <option value="Tahoma, sans-serif">تاهوما</option>
+        </select>
+        <select id="myNoteSize" class="note-toolbar-select" onchange="applyMyNoteComposerStyle()">
+          <option value="12">صغير</option>
+          <option value="13.5" selected>عادي</option>
+          <option value="16">متوسط</option>
+          <option value="19">كبير</option>
+          <option value="23">كبير جدًا</option>
+        </select>
+        <button type="button" id="myNoteBoldBtn" class="note-toolbar-bold" onclick="toggleMyNoteBold()" aria-pressed="false" aria-label="عريض">B</button>
+      </div>
+      <textarea id="myNoteInput" rows="3" placeholder="اكتب ملاحظة..." data-t-ph="typeNewNote"></textarea>
+      <button type="button" class="btn btn-primary note-add-btn" onclick="addMyNote()" data-t="addLabel">إضافة</button>
     </div>
     <div class="student-full-page-body" id="studentMynotesList"></div>
+  </section>
+
+  <section class="student-full-page" id="studentNoteviewPage" aria-labelledby="studentNoteviewPageTitle">
+    <div class="student-full-page-head">
+      <button class="icon-btn" type="button" onclick="showStudentSection('mynotes')" aria-label="back">&rarr;</button>
+      <h2 id="studentNoteviewPageTitle" data-t="myNotesLabel">ملاحظاتي</h2>
+    </div>
+    <div class="notebook-paper" id="noteviewContent"></div>
   </section>
 
   <section class="student-full-page" id="studentStreakPage" aria-labelledby="studentStreakPageTitle">
@@ -2856,7 +2971,7 @@
     // the popstate listener below).
     function renderStudentSection(section) {
       var shell = document.querySelector('.student-page .shell');
-      var pages = ['grades', 'attendance', 'notes', 'menu', 'todo', 'homework', 'leaderboard', 'account', 'mynotes', 'streak', 'badges'];
+      var pages = ['grades', 'attendance', 'notes', 'menu', 'todo', 'homework', 'leaderboard', 'account', 'mynotes', 'noteview', 'streak', 'badges'];
       setStudentNavActive(section);
       if (section === 'home') {
         shell.style.display = '';
@@ -3196,12 +3311,36 @@
     function saveMyNotes(items) {
       try { localStorage.setItem(myNotesStorageKey(), JSON.stringify(items)); } catch (e) { /* ignore */ }
     }
+
+    var myNoteBold = false;
+    window.toggleMyNoteBold = function () {
+      myNoteBold = !myNoteBold;
+      var btn = document.getElementById('myNoteBoldBtn');
+      btn.classList.toggle('active', myNoteBold);
+      btn.setAttribute('aria-pressed', myNoteBold ? 'true' : 'false');
+      applyMyNoteComposerStyle();
+    };
+    window.applyMyNoteComposerStyle = function () {
+      var input = document.getElementById('myNoteInput');
+      if (!input) return;
+      input.style.fontFamily = document.getElementById('myNoteFont').value;
+      input.style.fontSize = document.getElementById('myNoteSize').value + 'px';
+      input.style.fontWeight = myNoteBold ? '800' : '400';
+    };
+
     window.addMyNote = function () {
       var input = document.getElementById('myNoteInput');
       var text = input.value.trim();
       if (!text) return;
       var items = getMyNotes();
-      items.unshift({ id: Date.now().toString(36), text: text, createdAt: new Date().toISOString() });
+      items.unshift({
+        id: Date.now().toString(36),
+        text: text,
+        createdAt: new Date().toISOString(),
+        fontFamily: document.getElementById('myNoteFont').value,
+        fontSize: document.getElementById('myNoteSize').value,
+        bold: myNoteBold
+      });
       saveMyNotes(items);
       input.value = '';
       renderMyNotes();
@@ -3217,11 +3356,23 @@
       if (!items.length) { list.innerHTML = '<div class="empty-state">' + window.t('noMyNotesYet') + '</div>'; return; }
       list.innerHTML = items.map(function (item) {
         var date = item.createdAt ? new Date(item.createdAt).toLocaleString() : '';
-        return '<div class="my-notes-item">' +
-          '<div class="my-notes-item-text">' + escapeHtml(item.text) + '<span class="my-notes-item-meta">' + date + '</span></div>' +
-          '<button type="button" class="todo-delete" onclick="deleteMyNote(\'' + item.id + '\')" aria-label="delete">&times;</button>' +
+        var preview = item.text.length > 70 ? item.text.slice(0, 70).trim() + '…' : item.text;
+        var style = 'font-family:' + (item.fontFamily || 'inherit') + '; font-weight:' + (item.bold ? '800' : '400') + ';';
+        return '<div class="my-notes-item" onclick="openMyNote(\'' + item.id + '\')">' +
+          '<div class="my-notes-item-text" style="' + style + '">' + escapeHtml(preview) + '<span class="my-notes-item-meta">' + date + '</span></div>' +
+          '<button type="button" class="todo-delete" onclick="event.stopPropagation(); deleteMyNote(\'' + item.id + '\')" aria-label="delete">&times;</button>' +
           '</div>';
       }).join('');
+    };
+    window.openMyNote = function (id) {
+      var item = getMyNotes().find(function (n) { return n.id === id; });
+      if (!item) return;
+      var content = document.getElementById('noteviewContent');
+      content.style.fontFamily = item.fontFamily || 'inherit';
+      content.style.fontSize = (item.fontSize || '13.5') + 'px';
+      content.style.fontWeight = item.bold ? '800' : '400';
+      content.textContent = item.text;
+      showStudentSection('noteview');
     };
 
     // ---------- streak (consecutive attendance) ----------
