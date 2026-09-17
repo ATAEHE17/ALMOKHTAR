@@ -1302,13 +1302,20 @@
         <h4 onclick="toggleSettingsBlock(this)"><span>أجهزة الأدمن المسجلة</span><span class="chev">›</span></h4>
         <div class="settings-body">
           <p class="muted" style="font-size:12.5px; margin-bottom:10px;">
-            مسموح بتسجيل دخول حساب الأدمن من جهازين مختلفين كحد أقصى في نفس الوقت.
+            حدد أقصى عدد من الأجهزة يمكن لحساب الأدمن تسجيل الدخول منها في نفس الوقت.
           </p>
+          <div class="row" style="gap:8px; margin-bottom:10px; align-items:center;">
+            <label for="setMaxAdminDevices" style="font-size:13px;">أقصى عدد أجهزة</label>
+            <input type="number" id="setMaxAdminDevices" class="input" min="1" max="20" step="1" style="max-width:90px;">
+          </div>
           <div class="row-between" style="margin-bottom:10px;">
             <span id="adminDevicesCount" class="badge badge-muted">0 / 2 جهاز نشط</span>
           </div>
-          <button type="button" class="btn btn-ghost" onclick="handleClearAdminSessions()">تسجيل الخروج من كل أجهزة
+          <button type="button" class="btn btn-ghost" onclick="handleClearAdminSessions()">تسجيل الخروج من باقي أجهزة
             الأدمن</button>
+          <p class="muted" style="font-size:12px; margin-top:6px;">
+            هذا الزرار هيسجل الخروج من كل أجهزة الأدمن الأخرى فورًا، وهيسيب هذا الجهاز اللي بتستخدمه دلوقتي شغال.
+          </p>
         </div>
       </div>
 
@@ -2374,6 +2381,7 @@
       document.getElementById('setPlatformName').value = settings.platformName;
       document.getElementById('setAdminPass').value = settings.adminPassword;
       document.getElementById('setAdminEmail').value = settings.adminEmail || '';
+      document.getElementById('setMaxAdminDevices').value = window.getMaxAdminDevices();
       document.getElementById('logoPreview').innerHTML = settings.logo ? '<img src="' + settings.logo + '">' : (settings.platformName ? settings.platformName[0] : 'م');
       delete document.getElementById('loginBgMobilePreview').dataset.newLoginBgMobile;
       delete document.getElementById('loginBgDesktopPreview').dataset.newLoginBgDesktop;
@@ -2426,14 +2434,23 @@
     function renderAdminDevicesCount() {
       var sessions = window.getActiveDeviceSessions({ activeSessions: settings.adminSessions });
       var count = Object.keys(sessions).length;
-      document.getElementById('adminDevicesCount').textContent = count + ' / ' + window.MC_MAX_DEVICES + ' جهاز نشط';
+      document.getElementById('adminDevicesCount').textContent = count + ' / ' + window.getMaxAdminDevices() + ' جهاز نشط';
     }
 
+    // Logs out every OTHER admin device immediately (this device stays
+    // logged in). Writing the trimmed session map to settings.adminSessions
+    // is what triggers the live kick: every other open admin tab is
+    // listening for settings changes (see startAdminSessionGuard in
+    // shared.js) and will notice it's no longer in the list and log itself
+    // out right away — no refresh needed on the other end.
     window.handleClearAdminSessions = function () {
-      if (!confirm('سيتم تسجيل الخروج من حساب الأدمن على كل الأجهزة (بما فيها هذا الجهاز) في المرة القادمة اللي هيحاولوا يستخدموا فيها المنصة. هل تريد المتابعة؟')) return;
-      settings.adminSessions = null;
+      if (!confirm('سيتم تسجيل الخروج من حساب الأدمن فورًا من كل الأجهزة الأخرى (هذا الجهاز هيفضل شغال). هل تريد المتابعة؟')) return;
+      var deviceId = window.getDeviceId();
+      var onlyThisDevice = {};
+      onlyThisDevice[deviceId] = Date.now();
+      settings.adminSessions = onlyThisDevice;
       window.saveSettings(settings);
-      window.mcToast('تم تسجيل الخروج من كل أجهزة الأدمن');
+      window.mcToast('تم تسجيل الخروج من باقي أجهزة الأدمن');
       renderAdminDevicesCount();
     };
 
@@ -2573,6 +2590,8 @@
       settings.platformName = document.getElementById('setPlatformName').value.trim() || settings.platformName;
       settings.adminPassword = document.getElementById('setAdminPass').value.trim() || settings.adminPassword;
       settings.adminEmail = document.getElementById('setAdminEmail').value.trim();
+      var maxDevicesInput = parseInt(document.getElementById('setMaxAdminDevices').value, 10);
+      if (maxDevicesInput && maxDevicesInput >= 1) settings.maxAdminDevices = maxDevicesInput;
       settings.themeColor = pendingAccentColor || settings.themeColor || 'purple';
       var newLogo = document.getElementById('logoPreview').dataset.newLogo;
       if (newLogo) settings.logo = newLogo;
@@ -2677,6 +2696,14 @@
 
       window.applyAccentFromSettings();
       window.onMCUpdate('settings', window.applyAccentFromSettings);
+
+      // If this device gets removed from settings.adminSessions (another
+      // admin device used "log out other devices"), react immediately
+      // instead of waiting for a refresh.
+      window.startAdminSessionGuard(function () {
+        window.mcToast('تم تسجيل خروجك من هذا الجهاز بواسطة جهاز أدمن آخر');
+        setTimeout(function () { window.location.replace('index.html'); }, 900);
+      });
 
       // keep the UI in sync if data changes from another device
       window.onMCUpdate('students', function () {
