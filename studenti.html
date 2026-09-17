@@ -1487,6 +1487,80 @@
       color: var(--text-faint);
     }
 
+    /* ---------- streak page ---------- */
+    .streak-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+      margin-bottom: 14px;
+      padding: 26px 22px;
+    }
+
+    .streak-flame {
+      font-size: 40px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .streak-value {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .streak-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* ---------- badges page ---------- */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .badge-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      padding: 18px 10px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card-2);
+      opacity: .45;
+      filter: grayscale(1);
+      transition: opacity .2s ease, filter .2s ease, border-color .2s ease;
+    }
+
+    .badge-tile.unlocked {
+      opacity: 1;
+      filter: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent) inset;
+    }
+
+    .badge-icon {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .badge-title {
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+
+    .badge-progress {
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+
     .todo-item {
       display: flex;
       align-items: center;
@@ -2273,6 +2347,19 @@
         </svg>
         <span data-t="myAccount">بيانات حسابي</span>
       </div>
+      <div class="student-menu-card" onclick="renderStreakPage(); showStudentSection('streak')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 2c1 3-3 4-3 8a3 3 0 0 0 6 0c0-1-.5-2-1-3 2 1 4 3 4 6a6 6 0 0 1-12 0c0-5 3-7 6-11Z" />
+        </svg>
+        <span data-t="streakLabel">الاستمرارية</span>
+      </div>
+      <div class="student-menu-card" onclick="renderBadgesPage(); showStudentSection('badges')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="9" r="6" />
+          <path d="M9 14.5 7 22l5-3 5 3-2-7.5" />
+        </svg>
+        <span data-t="badgesLabel">الشارات</span>
+      </div>
       <div class="student-menu-card" onclick="showStudentSection('notes')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M5 3h11l3 3v15H5z" />
@@ -2367,6 +2454,37 @@
       <button type="button" class="btn btn-primary" onclick="addMyNote()" data-t="addLabel">إضافة</button>
     </div>
     <div class="student-full-page-body" id="studentMynotesList"></div>
+  </section>
+
+  <section class="student-full-page" id="studentStreakPage" aria-labelledby="studentStreakPageTitle">
+    <div class="student-full-page-head">
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
+      <h2 id="studentStreakPageTitle" data-t="streakLabel">الاستمرارية</h2>
+    </div>
+    <p class="muted" style="font-size:12.5px; margin-bottom:14px;" data-t="streakDesc">عدد الحصص المتتالية اللي حضرتها من غير غياب</p>
+    <div class="card streak-card">
+      <div class="streak-flame">🔥</div>
+      <div class="streak-value" id="currentStreakValue">0</div>
+      <div class="streak-label" data-t="currentStreak">سلسلتك الحالية</div>
+    </div>
+    <div class="stats-two">
+      <div class="stat-card"><b id="bestStreakValue">0</b><span data-t="bestStreak">أطول سلسلة حضور</span></div>
+      <div class="stat-card"><b id="streakTotalPresent">0</b><span data-t="sessionsCount">عدد الحصص</span></div>
+    </div>
+  </section>
+
+  <section class="student-full-page" id="studentBadgesPage" aria-labelledby="studentBadgesPageTitle">
+    <div class="student-full-page-head">
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
+      <h2 id="studentBadgesPageTitle" data-t="badgesLabel">الشارات</h2>
+    </div>
+    <p class="muted" style="font-size:12.5px; margin-bottom:14px;" data-t="badgesDesc">شارات بتتفتح تلقائي كل ما تحقق إنجاز جديد</p>
+
+    <h3 style="font-size:15px; margin-bottom:10px;" data-t="attendanceBadgesTitle">شارات الحضور</h3>
+    <div class="badges-grid" id="attendanceBadgesGrid"></div>
+
+    <h3 style="font-size:15px; margin:20px 0 10px;" data-t="gradesBadgesTitle">شارات الدرجات الكاملة</h3>
+    <div class="badges-grid" id="gradesBadgesGrid"></div>
   </section>
 
   <section class="student-full-page" id="studentLeaderboardPage" aria-labelledby="studentLeaderboardPageTitle">
@@ -2721,7 +2839,7 @@
     // the popstate listener below).
     function renderStudentSection(section) {
       var shell = document.querySelector('.student-page .shell');
-      var pages = ['grades', 'attendance', 'notes', 'menu', 'todo', 'homework', 'leaderboard', 'account', 'mynotes'];
+      var pages = ['grades', 'attendance', 'notes', 'menu', 'todo', 'homework', 'leaderboard', 'account', 'mynotes', 'streak', 'badges'];
       setStudentNavActive(section);
       if (section === 'home') {
         shell.style.display = '';
@@ -3089,6 +3207,71 @@
       }).join('');
     };
 
+    // ---------- streak (consecutive attendance) ----------
+    function computeAttendanceStreaks(studentId) {
+      var records = window.getAttendanceForStudent(studentId); // ascending by date
+      var best = 0, running = 0;
+      records.forEach(function (r) {
+        if (r.status === 'present') { running++; if (running > best) best = running; }
+        else if (r.status === 'absent') { running = 0; }
+      });
+      var current = 0;
+      for (var i = records.length - 1; i >= 0; i--) {
+        if (records[i].status === 'present') current++;
+        else break;
+      }
+      return { current: current, best: best };
+    }
+
+    window.renderStreakPage = function () {
+      var el = document.getElementById('currentStreakValue');
+      if (!el || !student) return;
+      var streaks = computeAttendanceStreaks(student.id);
+      el.textContent = streaks.current;
+      document.getElementById('bestStreakValue').textContent = streaks.best;
+      document.getElementById('streakTotalPresent').textContent = window.getAttendanceStats(student.id).present;
+    };
+
+    // ---------- badges (attendance milestones + perfect-grade milestones) ----------
+    var ATTENDANCE_BADGE_TIERS = [
+      { icon: '🥉', threshold: 10, key: 'Bronze' },
+      { icon: '🥈', threshold: 25, key: 'Silver' },
+      { icon: '🥇', threshold: 50, key: 'Gold' },
+      { icon: '💎', threshold: 100, key: 'Diamond' }
+    ];
+    var GRADES_BADGE_TIERS = [
+      { icon: '🥉', threshold: 1, key: 'Bronze' },
+      { icon: '🥈', threshold: 3, key: 'Silver' },
+      { icon: '🥇', threshold: 5, key: 'Gold' },
+      { icon: '💎', threshold: 10, key: 'Diamond' }
+    ];
+    function countFullGrades(studentId) {
+      return window.getGradesForStudent(studentId).filter(function (r) {
+        return Number(r.maxScore) > 0 && Number(r.score) === Number(r.maxScore);
+      }).length;
+    }
+    function badgeTileHtml(tier, value, titleKey, unitKey) {
+      var unlocked = value >= tier.threshold;
+      return '<div class="badge-tile' + (unlocked ? ' unlocked' : '') + '">' +
+        '<div class="badge-icon">' + tier.icon + '</div>' +
+        '<div class="badge-title">' + escapeHtml(window.t(titleKey)) + '</div>' +
+        '<div class="badge-progress">' + Math.min(value, tier.threshold) + ' / ' + tier.threshold + ' ' + escapeHtml(window.t(unitKey)) + '</div>' +
+        '</div>';
+    }
+    window.renderBadgesPage = function () {
+      var attGrid = document.getElementById('attendanceBadgesGrid');
+      if (!attGrid || !student) return;
+      var attendanceCount = window.getAttendanceStats(student.id).present;
+      attGrid.innerHTML = ATTENDANCE_BADGE_TIERS.map(function (tier) {
+        return badgeTileHtml(tier, attendanceCount, 'attendanceBadge' + tier.key, 'sessionsUnit');
+      }).join('');
+
+      var fullGradesCount = countFullGrades(student.id);
+      document.getElementById('gradesBadgesGrid').innerHTML = GRADES_BADGE_TIERS.map(function (tier) {
+        return badgeTileHtml(tier, fullGradesCount, 'gradesBadge' + tier.key, 'fullGradeUnit');
+      }).join('');
+    };
+
     window.renderLeaderboard = function () {
       var list = document.getElementById('studentLeaderboardList');
       if (!list || !student) return;
@@ -3227,9 +3410,11 @@
       renderProgressChart();
       renderCommunications();
       renderAccountPage();
+      renderStreakPage();
+      renderBadgesPage();
 
-      window.onMCUpdate('attendance', function () { renderStats(); renderMonthly(); renderLeaderboard(); renderAccountPage(); });
-      window.onMCUpdate('grades', function () { renderGradesFeatured(); renderGradesTable(); renderLatestGrades(); renderProgressChart(); renderCommunications(); renderLeaderboard(); renderAccountPage(); });
+      window.onMCUpdate('attendance', function () { renderStats(); renderMonthly(); renderLeaderboard(); renderAccountPage(); renderStreakPage(); renderBadgesPage(); });
+      window.onMCUpdate('grades', function () { renderGradesFeatured(); renderGradesTable(); renderLatestGrades(); renderProgressChart(); renderCommunications(); renderLeaderboard(); renderAccountPage(); renderBadgesPage(); });
       window.onMCUpdate('homework', renderCommunications);
       window.onMCUpdate('notes', renderCommunications);
       window.onMCUpdate('notifications', renderCommunications);
