@@ -444,8 +444,9 @@
         function loginAsAdmin(deviceId, err) {
             const liveSettings = window.getSettings() || {};
             const adminSessions = window.getActiveDeviceSessions({ activeSessions: liveSettings.adminSessions });
-            if (!window.canDeviceLogin(adminSessions, deviceId)) {
-                err.textContent = 'تم الوصول للحد الأقصى (جهازان) لتسجيل دخول الأدمن في نفس الوقت.';
+            const maxAdminDevices = window.getMaxAdminDevices();
+            if (!window.canDeviceLogin(adminSessions, deviceId, maxAdminDevices)) {
+                err.textContent = 'تم الوصول للحد الأقصى (' + maxAdminDevices + ' جهاز) لتسجيل دخول الأدمن في نفس الوقت.';
                 err.style.display = 'block';
                 return;
             }
