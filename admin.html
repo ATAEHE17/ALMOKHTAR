@@ -2681,6 +2681,14 @@
 
     window.whenMCReady(function () {
       settings = window.getSettings();
+
+      // Register/refresh this device in settings.adminSessions. Without this
+      // call the "log out other admin devices" button and the max-devices
+      // limit at login have nothing real to work from — no device was ever
+      // being recorded as logged in, so the session map stayed effectively
+      // empty (or stale) no matter how many admins were actually connected.
+      window.updateAdminSession(window.getDeviceId());
+
       setupCenter = settings.centers[0];
       setupClass = settings.classes[0];
       document.getElementById('mcLoader').classList.add('hide');
