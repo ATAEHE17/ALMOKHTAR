@@ -1349,6 +1349,90 @@
       opacity: .7;
     }
 
+    /* ---------- account page ---------- */
+    .account-profile-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .account-profile-card .profile-name {
+      margin-top: 2px;
+    }
+
+    .account-info-list {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 6px;
+    }
+
+    .account-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .account-info-row:last-child {
+      border-bottom: none;
+    }
+
+    .account-info-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .account-info-value {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .account-info-value-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .account-info-value-wrap .icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+    }
+
+    .account-info-value-wrap .icon-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .account-gender-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .account-gender-options {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .account-gender-options .btn {
+      flex: 1;
+    }
+
+    .account-gender-locked {
+      margin-top: 10px;
+      font-size: 13.5px;
+      color: var(--text-dim);
+    }
+
     .todo-add-row {
       display: flex;
       gap: 8px;
@@ -1363,6 +1447,44 @@
       background: var(--card-2);
       color: var(--text);
       font: inherit;
+    }
+
+    .todo-add-row textarea {
+      flex: 1;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card-2);
+      color: var(--text);
+      font: inherit;
+      resize: vertical;
+      min-height: 44px;
+    }
+
+    .my-notes-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card-2);
+    }
+
+    .my-notes-item-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 13.5px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .my-notes-item-meta {
+      display: block;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-faint);
     }
 
     .todo-item {
@@ -2144,6 +2266,13 @@
       <h2 id="studentMenuPageTitle" data-t="menuTitle">القائمة</h2>
     </div>
     <div class="student-menu-grid">
+      <div class="student-menu-card" onclick="renderAccountPage(); showStudentSection('account')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6" />
+        </svg>
+        <span data-t="myAccount">بيانات حسابي</span>
+      </div>
       <div class="student-menu-card" onclick="showStudentSection('notes')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M5 3h11l3 3v15H5z" />
@@ -2191,6 +2320,13 @@
         </svg>
         <span data-t="footballBookingLabel">حجوزات كورة</span>
       </div>
+      <div class="student-menu-card" onclick="renderMyNotes(); showStudentSection('mynotes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+        <span data-t="myNotesLabel">ملاحظاتي</span>
+      </div>
       <div class="student-menu-card" onclick="renderTodoList(); showStudentSection('todo')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <rect x="3" y="4" width="18" height="17" rx="2" />
@@ -2220,6 +2356,19 @@
     <div class="student-full-page-body" id="studentTodoList"></div>
   </section>
 
+  <section class="student-full-page" id="studentMynotesPage" aria-labelledby="studentMynotesPageTitle">
+    <div class="student-full-page-head">
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
+      <h2 id="studentMynotesPageTitle" data-t="myNotesLabel">ملاحظاتي</h2>
+    </div>
+    <p class="muted" style="font-size:12.5px; margin-bottom:14px;" data-t="myNotesDesc">دوّن أي ملاحظة تحب ترجع لها بعدين، زي وقت الحصة مثلاً</p>
+    <div class="todo-add-row">
+      <textarea id="myNoteInput" rows="2" placeholder="اكتب ملاحظة..." data-t-ph="typeNewNote"></textarea>
+      <button type="button" class="btn btn-primary" onclick="addMyNote()" data-t="addLabel">إضافة</button>
+    </div>
+    <div class="student-full-page-body" id="studentMynotesList"></div>
+  </section>
+
   <section class="student-full-page" id="studentLeaderboardPage" aria-labelledby="studentLeaderboardPageTitle">
     <div class="student-full-page-head">
       <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
@@ -2228,6 +2377,73 @@
     <p class="muted" style="font-size:12.5px; margin-bottom:14px;" data-t="leaderboardDesc">الترتيب داخل صفك بناءً على الدرجات والحضور</p>
     <div class="student-full-page-body" id="studentLeaderboardList"></div>
   </section>
+
+  <section class="student-full-page" id="studentAccountPage" aria-labelledby="studentAccountPageTitle">
+    <div class="student-full-page-head">
+      <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
+      <h2 id="studentAccountPageTitle" data-t="myAccount">بيانات حسابي</h2>
+    </div>
+
+    <div class="card account-profile-card">
+      <button type="button" class="avatar avatar-lg profile-avatar-button" id="accountAvatar"
+        onclick="document.getElementById('studentAvatarInput').click()" aria-label="profile photo"></button>
+      <div class="profile-name" id="accountName"></div>
+    </div>
+
+    <div class="card account-info-list">
+      <div class="account-info-row">
+        <span class="account-info-label" data-t="classCodeLabel">كود الصف الدراسي</span>
+        <span class="account-info-value" id="accountClassCode">—</span>
+      </div>
+      <div class="account-info-row">
+        <span class="account-info-label" data-t="studentPassword">كلمة المرور</span>
+        <span class="account-info-value-wrap">
+          <span class="account-info-value" id="accountPassword">••••••</span>
+          <button type="button" class="icon-btn" onclick="toggleAccountPasswordVisibility()" aria-label="show password">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </span>
+      </div>
+      <div class="account-info-row">
+        <span class="account-info-label" data-t="yourRank">ترتيبك في لوحة الصدارة</span>
+        <span class="account-info-value" id="accountRank">—</span>
+      </div>
+      <div class="account-info-row">
+        <span class="account-info-label" data-t="yourPoints">نقاطك</span>
+        <span class="account-info-value" id="accountPoints">—</span>
+      </div>
+    </div>
+
+    <div class="card" id="accountGenderCard">
+      <div class="account-gender-title" data-t="accountTypeTitle">النوع</div>
+      <p class="muted" style="font-size:12px; margin:0;" data-t="accountTypeHint">اختار نوعك مرة واحدة بس — هيتم استخدامه لاحقاً في حجوزات الكورة</p>
+      <div class="account-gender-options" id="accountGenderOptions">
+        <button type="button" class="btn btn-ghost" onclick="setStudentGender('male')" data-t="genderMale">ذكر</button>
+        <button type="button" class="btn btn-ghost" onclick="setStudentGender('female')" data-t="genderFemale">أنثى</button>
+      </div>
+      <div class="account-gender-locked" id="accountGenderLocked" style="display:none;">
+        <span data-t="accountTypeLockedPrefix">النوع المسجل:</span> <b id="accountGenderLockedValue"></b>
+      </div>
+    </div>
+  </section>
+
+  <div class="overlay" id="genderConfirmModal">
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title" data-t="accountTypeTitle">النوع</span><button class="modal-close"
+          onclick="closeModal('genderConfirmModal')">&times;</button></div>
+      <p style="color:var(--text-dim); font-size:14px; line-height:1.6; margin:0 0 20px;" data-t="genderConfirmMsg">
+        هتقدر تحدد النوع مرة واحدة بس ومش هتقدر تغيّره تاني بعد كده. متأكد؟</p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('genderConfirmModal')"
+          data-t="cancel">إلغاء</button>
+        <button type="button" class="btn btn-primary" onclick="confirmStudentGender()" data-t="confirmBtn">تأكيد</button>
+      </div>
+    </div>
+  </div>
+
 
   <nav class="student-bottom-nav" aria-label="student navigation">
     <button type="button" class="active" data-student-section="home" onclick="showStudentSection('home')"
@@ -2505,7 +2721,7 @@
     // the popstate listener below).
     function renderStudentSection(section) {
       var shell = document.querySelector('.student-page .shell');
-      var pages = ['grades', 'attendance', 'notes', 'menu', 'todo', 'homework', 'leaderboard'];
+      var pages = ['grades', 'attendance', 'notes', 'menu', 'todo', 'homework', 'leaderboard', 'account', 'mynotes'];
       setStudentNavActive(section);
       if (section === 'home') {
         shell.style.display = '';
@@ -2545,6 +2761,67 @@
       document.getElementById('profName').textContent = student.name;
       document.getElementById('profMeta').textContent = student.center + ' · ' + className(student.classId) + ' · ' + student.phone;
     }
+
+    // "بيانات حسابي" page: class code, password, leaderboard rank/points and
+    // the one-time gender field (used later to gate football-court bookings).
+    window.renderAccountPage = function () {
+      var accountAvatar = document.getElementById('accountAvatar');
+      if (!accountAvatar) return;
+      accountAvatar.innerHTML = student.avatar ? '<img src="' + student.avatar + '">' : window.initials(student.name);
+      document.getElementById('accountName').textContent = student.name;
+
+      var cls = settings.classes.find(function (c) { return c.id === student.classId; });
+      document.getElementById('accountClassCode').textContent = cls ? cls.code : '—';
+
+      var passwordEl = document.getElementById('accountPassword');
+      passwordEl.dataset.real = student.password || '';
+      passwordEl.dataset.revealed = 'false';
+      passwordEl.textContent = '••••••';
+
+      var ranking = window.getLeaderboardForClass(student.classId);
+      var idx = ranking.findIndex(function (entry) { return entry.student.id === student.id; });
+      document.getElementById('accountRank').textContent = idx > -1 ? ('#' + (idx + 1) + ' / ' + ranking.length) : '—';
+      document.getElementById('accountPoints').textContent = idx > -1 ? (ranking[idx].points + ' ' + window.t('points')) : '—';
+
+      renderAccountGender();
+    };
+
+    function renderAccountGender() {
+      var optionsWrap = document.getElementById('accountGenderOptions');
+      var lockedWrap = document.getElementById('accountGenderLocked');
+      if (!optionsWrap || !lockedWrap) return;
+      if (student.gender) {
+        optionsWrap.style.display = 'none';
+        lockedWrap.style.display = '';
+        document.getElementById('accountGenderLockedValue').textContent = student.gender === 'male' ? window.t('genderMale') : window.t('genderFemale');
+      } else {
+        optionsWrap.style.display = '';
+        lockedWrap.style.display = 'none';
+      }
+    }
+
+    window.toggleAccountPasswordVisibility = function () {
+      var el = document.getElementById('accountPassword');
+      var revealed = el.dataset.revealed === 'true';
+      el.textContent = revealed ? '••••••' : (el.dataset.real || '—');
+      el.dataset.revealed = revealed ? 'false' : 'true';
+    };
+
+    var pendingGender = null;
+    window.setStudentGender = function (gender) {
+      if (student.gender) return; // already locked — one-time choice only
+      pendingGender = gender;
+      openModal('genderConfirmModal');
+    };
+    window.confirmStudentGender = function () {
+      if (!pendingGender || student.gender) { closeModal('genderConfirmModal'); return; }
+      student.gender = pendingGender;
+      window.saveStudent(student);
+      pendingGender = null;
+      closeModal('genderConfirmModal');
+      renderAccountGender();
+      window.mcToast(window.t('genderSaved'));
+    };
 
     function renderStats() {
       var stats = window.getAttendanceStats(student.id);
@@ -2773,6 +3050,45 @@
       }).join('');
     };
 
+    // "ملاحظاتي" — the student's own private notes (e.g. things to remember
+    // during a session), separate from the notes the teacher sends them.
+    // Stored per-device like the to-do list, using the same pattern.
+    function myNotesStorageKey() { return 'mc_mynotes_' + student.id; }
+    function getMyNotes() {
+      try { return JSON.parse(localStorage.getItem(myNotesStorageKey()) || '[]'); }
+      catch (e) { return []; }
+    }
+    function saveMyNotes(items) {
+      try { localStorage.setItem(myNotesStorageKey(), JSON.stringify(items)); } catch (e) { /* ignore */ }
+    }
+    window.addMyNote = function () {
+      var input = document.getElementById('myNoteInput');
+      var text = input.value.trim();
+      if (!text) return;
+      var items = getMyNotes();
+      items.unshift({ id: Date.now().toString(36), text: text, createdAt: new Date().toISOString() });
+      saveMyNotes(items);
+      input.value = '';
+      renderMyNotes();
+    };
+    window.deleteMyNote = function (id) {
+      saveMyNotes(getMyNotes().filter(function (n) { return n.id !== id; }));
+      renderMyNotes();
+    };
+    window.renderMyNotes = function () {
+      var items = getMyNotes();
+      var list = document.getElementById('studentMynotesList');
+      if (!list) return;
+      if (!items.length) { list.innerHTML = '<div class="empty-state">' + window.t('noMyNotesYet') + '</div>'; return; }
+      list.innerHTML = items.map(function (item) {
+        var date = item.createdAt ? new Date(item.createdAt).toLocaleString() : '';
+        return '<div class="my-notes-item">' +
+          '<div class="my-notes-item-text">' + escapeHtml(item.text) + '<span class="my-notes-item-meta">' + date + '</span></div>' +
+          '<button type="button" class="todo-delete" onclick="deleteMyNote(\'' + item.id + '\')" aria-label="delete">&times;</button>' +
+          '</div>';
+      }).join('');
+    };
+
     window.renderLeaderboard = function () {
       var list = document.getElementById('studentLeaderboardList');
       if (!list || !student) return;
@@ -2886,6 +3202,8 @@
         student.avatar = dataUrl;
         window.saveStudent(student);
         renderProfile();
+        var accountAvatar = document.getElementById('accountAvatar');
+        if (accountAvatar) accountAvatar.innerHTML = '<img src="' + dataUrl + '">';
         window.mcToast('تم حفظ الصورة الشخصية');
       });
     });
@@ -2908,9 +3226,10 @@
       renderLatestGrades();
       renderProgressChart();
       renderCommunications();
+      renderAccountPage();
 
-      window.onMCUpdate('attendance', function () { renderStats(); renderMonthly(); renderLeaderboard(); });
-      window.onMCUpdate('grades', function () { renderGradesFeatured(); renderGradesTable(); renderLatestGrades(); renderProgressChart(); renderCommunications(); renderLeaderboard(); });
+      window.onMCUpdate('attendance', function () { renderStats(); renderMonthly(); renderLeaderboard(); renderAccountPage(); });
+      window.onMCUpdate('grades', function () { renderGradesFeatured(); renderGradesTable(); renderLatestGrades(); renderProgressChart(); renderCommunications(); renderLeaderboard(); renderAccountPage(); });
       window.onMCUpdate('homework', renderCommunications);
       window.onMCUpdate('notes', renderCommunications);
       window.onMCUpdate('notifications', renderCommunications);
