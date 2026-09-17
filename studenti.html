@@ -439,6 +439,12 @@
       }
     }
 
+    /* Per-student custom background (Account page → المظهر). Falls back to
+       the normal page background color when the student hasn't set one. */
+    body.student-page {
+      background: var(--student-bg, var(--bg)) center / cover no-repeat fixed;
+    }
+
     .chat-overlay {
       position: fixed;
       inset: 0;
@@ -3012,6 +3018,28 @@
         <span data-t="accountTypeLockedPrefix">النوع المسجل:</span> <b id="accountGenderLockedValue"></b>
       </div>
     </div>
+
+    <!-- Personal appearance: theme color + background, saved on the
+         student's own record so they only ever affect this student's
+         page — never the platform default that everyone else sees. -->
+    <div class="card">
+      <div class="account-gender-title" data-t="appearanceTitle">المظهر</div>
+
+      <p class="muted" style="font-size:12px; margin:14px 0 8px;" data-t="themeColorLabel">لون السمة</p>
+      <p class="muted" style="font-size:11.5px; margin:0 0 10px;" data-t="themeColorHint">اختار لون السمة الخاص بصفحتك بس — مش هيأثر على باقي المستخدمين</p>
+      <div id="studentAccentWrap" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+      <button type="button" class="btn btn-ghost" style="margin-top:10px;"
+        onclick="resetStudentAccentColor()" data-t="useDefaultThemeColor">استخدام لون المنصة الافتراضي</button>
+
+      <p class="muted" style="font-size:12px; margin:20px 0 8px;" data-t="pageBackgroundLabel">خلفية صفحتك</p>
+      <p class="muted" style="font-size:11.5px; margin:0 0 10px;" data-t="pageBackgroundHint">ارفع صورة تحبها كخلفية لصفحتك أنت بس</p>
+      <div id="studentBgPreview" style="width:100%; height:90px; border-radius:12px; background:var(--card-2); background-size:cover; background-position:center; margin-bottom:10px;"></div>
+      <input type="file" id="studentBgInput" accept="image/*" hidden>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('studentBgInput').click()" data-t="chooseBackgroundImage">اختيار صورة</button>
+        <button type="button" class="btn btn-ghost" onclick="removeStudentBackground()" data-t="removeBackgroundImage">إزالة الخلفية</button>
+      </div>
+    </div>
   </section>
 
   <div class="overlay" id="genderConfirmModal">
@@ -3389,6 +3417,82 @@
       }
 
       renderAccountGender();
+      renderAppearanceSection();
+    };
+
+    /* ---------------- personal appearance (theme color + background) ----------------
+       Both are saved on the student's own record, so they only ever change
+       what THIS student sees on their own device — never the shared
+       platform-wide theme color or anyone else's page. */
+    function renderAppearanceSection() {
+      var wrap = document.getElementById('studentAccentWrap');
+      if (!wrap) return;
+      wrap.innerHTML = Object.keys(window.ACCENT_PALETTE).map(function (key) {
+        var c = window.ACCENT_PALETTE[key];
+        var selected = key === student.accentColor;
+        return '<button type="button" data-accent-key="' + key + '" title="' + c.label + '" aria-label="' + c.label + '" style="width:40px;height:40px;border-radius:50%;background:' + c.accent + ';cursor:pointer;flex-shrink:0;border:3px solid ' + (selected ? 'var(--text)' : 'transparent') + ';box-shadow:' + (selected ? '0 0 0 2px ' + c.accent : 'none') + ';"></button>';
+      }).join('');
+      wrap.querySelectorAll('[data-accent-key]').forEach(function (btn) {
+        btn.addEventListener('click', function () { setStudentAccentColor(btn.dataset.accentKey); });
+      });
+
+      var bgPreview = document.getElementById('studentBgPreview');
+      if (bgPreview) {
+        bgPreview.style.backgroundImage = student.background ? "url('" + student.background + "')" : 'none';
+      }
+    }
+
+    // Re-paints the accent color from the student's personal choice, if any.
+    // Called after applyAccentFromSettings() so a live settings change from
+    // the admin (which repaints the platform default) never wipes out a
+    // student's own color — this always has the final say for their page.
+    function applyStudentAccent() {
+      if (student && student.accentColor) window.previewAccentColor(student.accentColor);
+    }
+
+    function setStudentAccentColor(key) {
+      student.accentColor = key;
+      window.saveStudent(student);
+      applyStudentAccent();
+      renderAppearanceSection();
+      window.mcToast(window.t('themeColorSaved'));
+    }
+
+    window.resetStudentAccentColor = function () {
+      student.accentColor = '';
+      window.saveStudent(student);
+      window.applyAccentFromSettings();
+      renderAppearanceSection();
+      window.mcToast(window.t('themeColorReset'));
+    };
+
+    // Paints the student's own background image (or clears back to the
+    // normal page background) via the --student-bg CSS var declared next to
+    // body.student-page in the styles above.
+    function applyStudentBackground() {
+      document.documentElement.style.setProperty('--student-bg', (student && student.background) ? "url('" + student.background + "')" : '');
+    }
+
+    document.getElementById('studentBgInput').addEventListener('change', function (event) {
+      var file = event.target.files[0];
+      if (!file || !student) return;
+      window.fileToResizedDataUrl(file, 1600, 0.82, function (dataUrl) {
+        if (!dataUrl) { window.mcToast(window.t('couldNotReadImage')); return; }
+        student.background = dataUrl;
+        window.saveStudent(student);
+        applyStudentBackground();
+        renderAppearanceSection();
+        window.mcToast(window.t('backgroundSaved'));
+      });
+      event.target.value = '';
+    });
+
+    window.removeStudentBackground = function () {
+      student.background = '';
+      window.saveStudent(student);
+      applyStudentBackground();
+      renderAppearanceSection();
+      window.mcToast(window.t('backgroundRemoved'));
     };
 
     function renderAccountGender() {
@@ -4226,7 +4330,9 @@
       if (!student) { window.clearSession(); window.location.href = 'index.html'; return; }
 
       window.applyAccentFromSettings();
-      window.onMCUpdate('settings', window.applyAccentFromSettings);
+      applyStudentAccent();
+      applyStudentBackground();
+      window.onMCUpdate('settings', function () { window.applyAccentFromSettings(); applyStudentAccent(); });
 
       document.getElementById('mcLoader').classList.add('hide');
       localize();
@@ -4249,7 +4355,7 @@
       window.onMCUpdate('notifications', renderCommunications);
       window.onMCUpdate('students', function () {
         var fresh = window.getStudentById(session.studentId);
-        if (fresh) { student = fresh; renderProfile(); renderAccountPage(); }
+        if (fresh) { student = fresh; renderProfile(); renderAccountPage(); applyStudentAccent(); applyStudentBackground(); }
         renderLeaderboard();
       });
     });
