@@ -285,6 +285,39 @@
       height: 26px;
     }
 
+    /* floating "add note" button — only actually visible while the
+       notes list page is open, since it lives inside that section and
+       fixed-position elements don't render while their ancestor is
+       display:none */
+    .fab-add-note {
+      position: fixed;
+      bottom: 96px;
+      inset-inline-end: 20px;
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .52);
+      box-shadow: 0 16px 30px -10px var(--accent-shadow), inset 0 1px 1px rgba(255, 255, 255, .35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 46;
+    }
+
+    .fab-add-note svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    @media(max-width:639px) {
+      .fab-add-note {
+        bottom: 92px;
+      }
+    }
+
     /* whatsapp contact button */
     .fab-whatsapp {
       position: fixed;
@@ -1461,24 +1494,196 @@
       min-height: 44px;
     }
 
-    /* ---------- note composer (my notes) ---------- */
-    .note-composer {
+    /* ---------- my notes: list/sidebar ---------- */
+    .notes-head-actions {
       display: flex;
-      flex-direction: column;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-inline-start: auto;
     }
 
-    .note-toolbar {
+    .notes-filter-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+    }
+
+    .note-filter-chip {
+      flex-shrink: 0;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card-2);
+      color: var(--text-dim);
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .note-filter-chip.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-2);
+    }
+
+    /* ---------- my notes: editor ---------- */
+    /* Must only apply display:flex while this page also has .open —
+       otherwise, since this selector's specificity ties with
+       ".student-full-page { display:none }" and comes later in the
+       stylesheet, it would win by source order and keep the note
+       editor visible everywhere on the site instead of only when
+       opened via the "+" button. */
+    .note-editor-page.open {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .note-editor-head {
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-bottom: 12px;
       flex-wrap: wrap;
     }
 
-    .note-toolbar-select {
+    .note-folder-select {
       flex: 1;
-      min-width: 96px;
+      min-width: 100px;
+    }
+
+    .note-title-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 22px;
+      font-weight: 800;
+      padding: 6px 2px 14px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .note-title-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .note-toolbar-scroll {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 6px 2px 12px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .note-toolbar-scroll .note-toolbar-select {
+      flex-shrink: 0;
+      width: auto;
+      min-width: 92px;
+    }
+
+    .note-tb-btn {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card-2);
+      color: var(--text-dim);
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .1s ease, background .15s ease, border-color .15s ease, color .15s ease;
+    }
+
+    .note-tb-btn:hover {
+      color: var(--text);
+      border-color: var(--accent-2);
+    }
+
+    .note-tb-btn:active {
+      transform: scale(.9);
+    }
+
+    /* Clearly-visible "this is on" state — filled accent background plus
+       a ring, so it reads at a glance even on a small screen. */
+    .note-tb-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .note-tb-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ---------- mobile: bigger tap targets + sticky toolbar ---------- */
+    @media(max-width:639px) {
+      .note-editor-head {
+        gap: 6px;
+      }
+
+      .note-toolbar-scroll {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--bg);
+        gap: 8px;
+        padding: 8px 2px 12px;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
+      }
+
+      .note-tb-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        font-size: 16px;
+        scroll-snap-align: start;
+      }
+
+      .note-tb-btn svg {
+        width: 19px;
+        height: 19px;
+      }
+
+      .note-toolbar-scroll .note-toolbar-select {
+        min-width: 104px;
+        padding: 9px 10px;
+        font-size: 13px;
+      }
+
+      .note-title-input {
+        font-size: 19px;
+        padding: 8px 2px 12px;
+      }
+
+      .note-editor-foot {
+        position: sticky;
+        bottom: 0;
+        background: var(--bg);
+        padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+      }
+
+      .note-editor-foot .btn-sm {
+        padding: 10px 18px;
+        font-size: 13.5px;
+      }
+    }
+
+    .note-toolbar-select {
       padding: 7px 10px;
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -1487,69 +1692,132 @@
       font-size: 12px;
     }
 
-    .note-toolbar-bold {
-      width: 34px;
-      height: 34px;
-      flex-shrink: 0;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--card-2);
-      color: var(--text);
-      font-weight: 800;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .note-toolbar-bold.active {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      color: var(--accent-2);
-    }
-
-    .note-composer textarea {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--card-2);
-      color: var(--text);
-      resize: vertical;
-      min-height: 70px;
-    }
-
-    .note-add-btn {
-      align-self: flex-end;
-      padding: 8px 22px;
-      font-size: 13px;
-    }
-
-    /* ---------- notebook-style full note view ---------- */
-    .notebook-paper {
-      position: relative;
-      min-height: 320px;
-      padding: 20px 40px 20px 20px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background-color: var(--card-2);
-      background-image: repeating-linear-gradient(var(--card-2) 0px, var(--card-2) 27px, var(--line) 28px);
-      background-size: 100% 28px;
-      line-height: 28px;
+    .note-editor-body {
+      flex: 1;
+      min-height: 260px;
+      padding: 5px 14px 40px 10px;
       font-size: 15px;
-      white-space: pre-wrap;
-      word-break: break-word;
-      overflow: hidden;
+      line-height: 30px;
+      outline: none;
+      /* notebook ruled-paper effect: a repeating horizontal line every
+         30px (matches line-height above) plus a vertical margin line
+         like a real school notebook */
+      background-image:
+        repeating-linear-gradient(to bottom, transparent, transparent 29px, var(--line) 29px, var(--line) 30px),
+        linear-gradient(to var(--note-margin-side, left), transparent 38px, rgba(240, 71, 90, .35) 38px, rgba(240, 71, 90, .35) 40px, transparent 40px);
+      background-position: 0 4px, 0 0;
     }
 
-    .notebook-paper::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 26px;
-      width: 1px;
-      background: rgba(220, 60, 70, .4);
+    html[dir="rtl"] .note-editor-body {
+      --note-margin-side: right;
     }
 
+    .note-editor-body:empty::before {
+      content: "ابدأ الكتابة هنا...";
+      color: var(--text-faint);
+    }
+
+    @media(min-width:900px) {
+      .note-editor-body {
+        line-height: 32px;
+        background-image:
+          repeating-linear-gradient(to bottom, transparent, transparent 31px, var(--line) 31px, var(--line) 32px),
+          linear-gradient(to var(--note-margin-side, left), transparent 38px, rgba(240, 71, 90, .35) 38px, rgba(240, 71, 90, .35) 40px, transparent 40px);
+        background-position: 0 6px, 0 0;
+      }
+    }
+
+    .note-editor-body ul,
+    .note-editor-body ol {
+      padding-inline-start: 22px;
+      margin: 8px 0;
+    }
+
+    .note-editor-body h2 {
+      font-size: 19px;
+      font-weight: 800;
+      margin: 14px 0 8px;
+    }
+
+    .note-editor-body h3 {
+      font-size: 16px;
+      font-weight: 800;
+      margin: 12px 0 6px;
+    }
+
+    .note-editor-body a {
+      color: var(--accent-2);
+      text-decoration: underline;
+    }
+
+    .note-checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 4px 0;
+    }
+
+    .note-checklist-item input[type="checkbox"] {
+      margin-top: 4px;
+      accent-color: var(--accent);
+    }
+
+    .note-checklist-item input:checked+span {
+      text-decoration: line-through;
+      color: var(--text-faint);
+    }
+
+    .note-image {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 8px 0;
+      display: block;
+    }
+
+    .note-table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .note-table td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      min-width: 60px;
+    }
+
+    .note-editor-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* wider screens: notes list becomes a gallery grid instead of one
+       column, and the editor gets a bit more breathing room — the app
+       still opens one page at a time (list, then editor), matching how
+       every other section here works, just sized up for a bigger screen */
+    @media(min-width:640px) {
+      #studentMynotesList {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(min-width:900px) {
+      #studentMynotesList {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .note-editor-body {
+        font-size: 16px;
+      }
+
+      .note-title-input {
+        font-size: 26px;
+      }
+    }
     .my-notes-item {
       display: flex;
       align-items: flex-start;
@@ -1638,6 +1906,35 @@
       filter: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 1px var(--accent) inset;
+      cursor: pointer;
+    }
+
+    .badge-tile.unlocked:hover {
+      border-color: var(--accent-2);
+    }
+
+    .badge-share-hint {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent-2);
+      margin-top: 2px;
+    }
+
+    /* ---------- account page: subscription status (read-only pill) ---------- */
+    .pay-status-pill {
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 11.5px;
+      font-weight: 800;
+      background: var(--bad-soft);
+      color: var(--bad);
+      flex-shrink: 0;
+    }
+
+    .pay-status-pill.on {
+      background: var(--ok-soft);
+      color: var(--ok);
     }
 
     .badge-icon {
@@ -2550,38 +2847,71 @@
     <div class="student-full-page-head">
       <button class="icon-btn" type="button" onclick="history.back()" aria-label="back">&rarr;</button>
       <h2 id="studentMynotesPageTitle" data-t="myNotesLabel">ملاحظاتي</h2>
-    </div>
-    <p class="muted" style="font-size:12.5px; margin-bottom:14px;" data-t="myNotesDesc">دوّن أي ملاحظة تحب ترجع لها بعدين، زي وقت الحصة مثلاً</p>
-    <div class="note-composer">
-      <div class="note-toolbar">
-        <select id="myNoteFont" class="note-toolbar-select" onchange="applyMyNoteComposerStyle()">
-          <option value="inherit">الخط الافتراضي</option>
-          <option value="'Tajawal', sans-serif">تجوال</option>
-          <option value="'Amiri', serif">كلاسيكي</option>
-          <option value="'Courier New', monospace">مسافة ثابتة</option>
-          <option value="Tahoma, sans-serif">تاهوما</option>
-        </select>
-        <select id="myNoteSize" class="note-toolbar-select" onchange="applyMyNoteComposerStyle()">
-          <option value="12">صغير</option>
-          <option value="13.5" selected>عادي</option>
-          <option value="16">متوسط</option>
-          <option value="19">كبير</option>
-          <option value="23">كبير جدًا</option>
-        </select>
-        <button type="button" id="myNoteBoldBtn" class="note-toolbar-bold" onclick="toggleMyNoteBold()" aria-pressed="false" aria-label="عريض">B</button>
+      <div class="notes-head-actions">
+        <button class="icon-btn" type="button" onclick="openFolderManager()" aria-label="مجلدات" title="مجلدات">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" /></svg>
+        </button>
       </div>
-      <textarea id="myNoteInput" rows="3" placeholder="اكتب ملاحظة..." data-t-ph="typeNewNote"></textarea>
-      <button type="button" class="btn btn-primary note-add-btn" onclick="addMyNote()" data-t="addLabel">إضافة</button>
     </div>
+    <div class="notes-filter-row" id="notesFilterRow"></div>
     <div class="student-full-page-body" id="studentMynotesList"></div>
+    <button class="fab-add-note" type="button" onclick="createNewNote()" aria-label="ملاحظة جديدة">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" /></svg>
+    </button>
   </section>
 
-  <section class="student-full-page" id="studentNoteviewPage" aria-labelledby="studentNoteviewPageTitle">
-    <div class="student-full-page-head">
-      <button class="icon-btn" type="button" onclick="showStudentSection('mynotes')" aria-label="back">&rarr;</button>
-      <h2 id="studentNoteviewPageTitle" data-t="myNotesLabel">ملاحظاتي</h2>
+  <section class="student-full-page note-editor-page" id="studentNoteviewPage" aria-labelledby="studentNoteviewPageTitle">
+    <div class="note-editor-head">
+      <button class="icon-btn" type="button" onclick="closeNoteEditor()" aria-label="back">&rarr;</button>
+      <select id="noteFolderSelect" class="note-toolbar-select note-folder-select" onchange="onNoteFolderChange()"></select>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="deleteCurrentNote()">حذف</button>
+      <button class="btn btn-ghost btn-sm" type="button" onclick="closeNoteEditor()">إغلاق</button>
     </div>
-    <div class="notebook-paper" id="noteviewContent"></div>
+    <input type="text" id="noteTitleInput" class="note-title-input" placeholder="بدون عنوان" oninput="scheduleNoteAutosave()">
+    <div class="note-toolbar note-toolbar-scroll">
+      <select id="noteTextStyle" class="note-toolbar-select" onchange="noteExec('formatBlock', this.value)">
+        <option value="P">نص</option>
+        <option value="H2">عنوان كبير</option>
+        <option value="H3">عنوان صغير</option>
+      </select>
+      <button type="button" class="note-tb-btn" id="noteBoldBtn" onclick="noteExec('bold')" title="عريض"><b>B</b></button>
+      <button type="button" class="note-tb-btn" id="noteItalicBtn" onclick="noteExec('italic')" title="مائل"><i>I</i></button>
+      <button type="button" class="note-tb-btn" id="noteStrikeBtn" onclick="noteExec('strikeThrough')" title="يتوسطه خط"><s>S</s></button>
+      <button type="button" class="note-tb-btn" id="noteUnderlineBtn" onclick="noteExec('underline')" title="تسطير"><u>U</u></button>
+      <button type="button" class="note-tb-btn" id="noteUlBtn" onclick="noteExec('insertUnorderedList')" title="قائمة نقطية">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="4" cy="6" r="1.3" fill="currentColor" /><circle cx="4" cy="12" r="1.3" fill="currentColor" /><circle cx="4" cy="18" r="1.3" fill="currentColor" /><path d="M9 6h11M9 12h11M9 18h11" /></svg>
+      </button>
+      <button type="button" class="note-tb-btn" id="noteOlBtn" onclick="noteExec('insertOrderedList')" title="قائمة مرقمة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6h11M9 12h11M9 18h11" /><text x="1" y="8" font-size="7" fill="currentColor" stroke="none">1</text><text x="1" y="14" font-size="7" fill="currentColor" stroke="none">2</text><text x="1" y="20" font-size="7" fill="currentColor" stroke="none">3</text></svg>
+      </button>
+      <button type="button" class="note-tb-btn" onclick="insertChecklistItem()" title="تشيك ليست">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4" /><path d="m8 12 3 3 5-6" /></svg>
+      </button>
+      <button type="button" class="note-tb-btn" onclick="insertNoteLink()" title="رابط">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1.5 1.5" /><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1.5-1.5" /></svg>
+      </button>
+      <button type="button" class="note-tb-btn" onclick="noteHighlight()" title="تمييز">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11 6-6 4 4-6 6-4-4Z" /><path d="m7 13-3 3 1 3 3 1 3-3" /></svg>
+      </button>
+      <button type="button" class="note-tb-btn" id="noteFavoriteBtn" onclick="toggleNoteFavorite()" title="تفضيل">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3 2.8 6 6.6.6-5 4.5 1.5 6.4-5.9-3.6L6.1 20.5 7.6 14 2.6 9.6l6.6-.6L12 3Z" /></svg>
+      </button>
+      <button type="button" class="note-tb-btn" onclick="document.getElementById('noteImageInput').click()" title="صورة">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3" /><circle cx="8.5" cy="10" r="1.7" /><path d="m21 16-5-5-4 4-2-2-4.5 4.5" /></svg>
+      </button>
+      <button type="button" class="note-tb-btn" onclick="insertNoteTable()" title="جدول">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 10h18M3 16h18M9 4v16M15 4v16" /></svg>
+      </button>
+      <button type="button" class="note-tb-btn" onclick="noteExec('insertHorizontalRule')" title="خط فاصل">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16" /></svg>
+      </button>
+      <input type="file" id="noteImageInput" accept="image/*" style="display:none" onchange="insertNoteImage(event)">
+    </div>
+    <div class="note-editor-body" id="noteEditorBody" contenteditable="true" oninput="scheduleNoteAutosave()"></div>
+    <div class="note-editor-foot">
+      <span id="noteLastEdit" class="muted" style="font-size:11.5px;"></span>
+      <button type="button" class="btn btn-primary btn-sm" onclick="saveCurrentNote()">حفظ</button>
+    </div>
   </section>
 
   <section class="student-full-page" id="studentStreakPage" aria-labelledby="studentStreakPageTitle">
@@ -2664,6 +2994,10 @@
       <div class="account-info-row">
         <span class="account-info-label" data-t="yourPoints">نقاطك</span>
         <span class="account-info-value" id="accountPoints">—</span>
+      </div>
+      <div class="account-info-row">
+        <span class="account-info-label" data-t="subscriptionStatusLabel">حالة الاشتراك</span>
+        <span class="pay-status-pill" id="accountPaidStatus">—</span>
       </div>
     </div>
 
@@ -3033,6 +3367,12 @@
       document.getElementById('accountRank').textContent = idx > -1 ? ('#' + (idx + 1) + ' / ' + ranking.length) : '—';
       document.getElementById('accountPoints').textContent = idx > -1 ? (ranking[idx].points + ' ' + window.t('points')) : '—';
 
+      var paidEl = document.getElementById('accountPaidStatus');
+      if (paidEl) {
+        paidEl.textContent = student.paid ? window.t('paid') : window.t('unpaid');
+        paidEl.classList.toggle('on', !!student.paid);
+      }
+
       renderAccountGender();
     };
 
@@ -3303,76 +3643,245 @@
     // "ملاحظاتي" — the student's own private notes (e.g. things to remember
     // during a session), separate from the notes the teacher sends them.
     // Stored per-device like the to-do list, using the same pattern.
+    /* ================= my notes (rich, folders, favorites) ================= */
+    var currentNoteId = null;
+    var activeNoteFolder = 'all';
+    var noteAutosaveTimer = null;
+
     function myNotesStorageKey() { return 'mc_mynotes_' + student.id; }
+    function notesFoldersKey() { return 'mc_mynotes_folders_' + student.id; }
     function getMyNotes() {
       try { return JSON.parse(localStorage.getItem(myNotesStorageKey()) || '[]'); }
       catch (e) { return []; }
     }
-    function saveMyNotes(items) {
+    function saveMyNotesList(items) {
       try { localStorage.setItem(myNotesStorageKey(), JSON.stringify(items)); } catch (e) { /* ignore */ }
     }
+    function getNoteFolders() {
+      try { return JSON.parse(localStorage.getItem(notesFoldersKey()) || '[]'); }
+      catch (e) { return []; }
+    }
+    function saveNoteFolders(list) {
+      try { localStorage.setItem(notesFoldersKey(), JSON.stringify(list)); } catch (e) { /* ignore */ }
+    }
 
-    var myNoteBold = false;
-    window.toggleMyNoteBold = function () {
-      myNoteBold = !myNoteBold;
-      var btn = document.getElementById('myNoteBoldBtn');
-      btn.classList.toggle('active', myNoteBold);
-      btn.setAttribute('aria-pressed', myNoteBold ? 'true' : 'false');
-      applyMyNoteComposerStyle();
-    };
-    window.applyMyNoteComposerStyle = function () {
-      var input = document.getElementById('myNoteInput');
-      if (!input) return;
-      input.style.fontFamily = document.getElementById('myNoteFont').value;
-      input.style.fontSize = document.getElementById('myNoteSize').value + 'px';
-      input.style.fontWeight = myNoteBold ? '800' : '400';
-    };
-
-    window.addMyNote = function () {
-      var input = document.getElementById('myNoteInput');
-      var text = input.value.trim();
-      if (!text) return;
-      var items = getMyNotes();
-      items.unshift({
-        id: Date.now().toString(36),
-        text: text,
-        createdAt: new Date().toISOString(),
-        fontFamily: document.getElementById('myNoteFont').value,
-        fontSize: document.getElementById('myNoteSize').value,
-        bold: myNoteBold
-      });
-      saveMyNotes(items);
-      input.value = '';
-      renderMyNotes();
-    };
-    window.deleteMyNote = function (id) {
-      saveMyNotes(getMyNotes().filter(function (n) { return n.id !== id; }));
-      renderMyNotes();
-    };
     window.renderMyNotes = function () {
       var items = getMyNotes();
+      renderNotesFilterRow(items);
+      var filtered = activeNoteFolder === 'all' ? items : items.filter(function (n) { return n.folder === activeNoteFolder; });
+      filtered.sort(function (a, b) { return (b.updatedAt || b.createdAt || '').localeCompare(a.updatedAt || a.createdAt || ''); });
       var list = document.getElementById('studentMynotesList');
       if (!list) return;
-      if (!items.length) { list.innerHTML = '<div class="empty-state">' + window.t('noMyNotesYet') + '</div>'; return; }
-      list.innerHTML = items.map(function (item) {
-        var date = item.createdAt ? new Date(item.createdAt).toLocaleString() : '';
-        var preview = item.text.length > 70 ? item.text.slice(0, 70).trim() + '…' : item.text;
-        var style = 'font-family:' + (item.fontFamily || 'inherit') + '; font-weight:' + (item.bold ? '800' : '400') + ';';
+      if (!filtered.length) { list.innerHTML = '<div class="empty-state">' + window.t('noMyNotesYet') + '</div>'; return; }
+      list.innerHTML = filtered.map(function (item) {
+        var date = item.updatedAt || item.createdAt ? new Date(item.updatedAt || item.createdAt).toLocaleDateString() : '';
+        var title = (item.title || '').trim() || 'بدون عنوان';
         return '<div class="my-notes-item" onclick="openMyNote(\'' + item.id + '\')">' +
-          '<div class="my-notes-item-text" style="' + style + '">' + escapeHtml(preview) + '<span class="my-notes-item-meta">' + date + '</span></div>' +
-          '<button type="button" class="todo-delete" onclick="event.stopPropagation(); deleteMyNote(\'' + item.id + '\')" aria-label="delete">&times;</button>' +
+          '<div class="my-notes-item-text"><b>' + escapeHtml(title) + (item.favorite ? ' ★' : '') + '</b>' +
+          '<span class="my-notes-item-meta">' + date + '</span></div>' +
+          '<button type="button" class="todo-delete" onclick="event.stopPropagation(); quickDeleteNote(\'' + item.id + '\')" aria-label="delete">&times;</button>' +
           '</div>';
       }).join('');
     };
+
+    function renderNotesFilterRow(items) {
+      var row = document.getElementById('notesFilterRow');
+      if (!row) return;
+      items = items || getMyNotes();
+      var folders = getNoteFolders();
+      var chips = [{ key: 'all', label: 'الكل (' + items.length + ')' }].concat(
+        folders.map(function (f) {
+          return { key: f, label: f + ' (' + items.filter(function (n) { return n.folder === f; }).length + ')' };
+        })
+      );
+      row.innerHTML = chips.map(function (c) {
+        var safeKey = c.key.replace(/'/g, "\\'");
+        return '<button type="button" class="note-filter-chip' + (activeNoteFolder === c.key ? ' active' : '') + '" onclick="setNoteFolder(\'' + safeKey + '\')">' + escapeHtml(c.label) + '</button>';
+      }).join('');
+    }
+    window.setNoteFolder = function (key) { activeNoteFolder = key; renderMyNotes(); };
+
+    window.quickDeleteNote = function (id) {
+      saveMyNotesList(getMyNotes().filter(function (n) { return n.id !== id; }));
+      renderMyNotes();
+    };
+
+    window.createNewNote = function () {
+      var items = getMyNotes();
+      var note = {
+        id: Date.now().toString(36), title: '', html: '',
+        folder: activeNoteFolder === 'all' ? '' : activeNoteFolder,
+        favorite: false, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+      };
+      items.unshift(note);
+      saveMyNotesList(items);
+      openMyNote(note.id);
+    };
+
+    window.openFolderManager = function () {
+      var name = prompt('اسم المجلد الجديد:');
+      if (!name) return;
+      name = name.trim();
+      if (!name) return;
+      var folders = getNoteFolders();
+      if (folders.indexOf(name) === -1) { folders.push(name); saveNoteFolders(folders); }
+      renderMyNotes();
+    };
+
     window.openMyNote = function (id) {
       var item = getMyNotes().find(function (n) { return n.id === id; });
       if (!item) return;
-      var content = document.getElementById('noteviewContent');
-      content.style.fontFamily = item.fontFamily || 'inherit';
-      content.style.fontSize = (item.fontSize || '13.5') + 'px';
-      content.style.fontWeight = item.bold ? '800' : '400';
-      content.textContent = item.text;
+      currentNoteId = id;
+      document.getElementById('noteTitleInput').value = item.title || '';
+      document.getElementById('noteEditorBody').innerHTML = item.html || '';
+      populateNoteFolderSelect(item.folder || '');
+      updateFavoriteButton(item.favorite);
+      updateLastEditLabel(item.updatedAt || item.createdAt);
+      updateNoteToolbarState();
       showStudentSection('noteview');
+    };
+
+    function populateNoteFolderSelect(selected) {
+      var sel = document.getElementById('noteFolderSelect');
+      var folders = getNoteFolders();
+      sel.innerHTML = '<option value="">بدون مجلد</option>' + folders.map(function (f) {
+        return '<option value="' + escapeHtml(f) + '"' + (f === selected ? ' selected' : '') + '>' + escapeHtml(f) + '</option>';
+      }).join('');
+    }
+    window.onNoteFolderChange = function () { saveCurrentNote(false); };
+
+    function updateFavoriteButton(fav) {
+      var btn = document.getElementById('noteFavoriteBtn');
+      if (btn) btn.classList.toggle('active', !!fav);
+    }
+    window.toggleNoteFavorite = function () {
+      var btn = document.getElementById('noteFavoriteBtn');
+      btn.classList.toggle('active');
+      saveCurrentNote(false);
+    };
+
+    function updateLastEditLabel(iso) {
+      var el = document.getElementById('noteLastEdit');
+      if (el) el.textContent = 'آخر تعديل: ' + (iso ? new Date(iso).toLocaleString() : '—');
+    }
+
+    window.scheduleNoteAutosave = function () {
+      clearTimeout(noteAutosaveTimer);
+      noteAutosaveTimer = setTimeout(function () { saveCurrentNote(false); }, 800);
+    };
+
+    window.saveCurrentNote = function (showFeedback) {
+      if (!currentNoteId) return;
+      var items = getMyNotes();
+      var idx = items.findIndex(function (n) { return n.id === currentNoteId; });
+      if (idx === -1) return;
+      items[idx].title = document.getElementById('noteTitleInput').value.trim();
+      items[idx].html = document.getElementById('noteEditorBody').innerHTML;
+      items[idx].folder = document.getElementById('noteFolderSelect').value;
+      items[idx].favorite = document.getElementById('noteFavoriteBtn').classList.contains('active');
+      items[idx].updatedAt = new Date().toISOString();
+      saveMyNotesList(items);
+      updateLastEditLabel(items[idx].updatedAt);
+      if (showFeedback !== false) window.mcToast('تم الحفظ');
+    };
+
+    window.deleteCurrentNote = function () {
+      if (!currentNoteId) return;
+      if (!confirm('هل تريد حذف هذه الملاحظة؟')) return;
+      saveMyNotesList(getMyNotes().filter(function (n) { return n.id !== currentNoteId; }));
+      currentNoteId = null;
+      renderMyNotes();
+      showStudentSection('mynotes');
+    };
+
+    window.closeNoteEditor = function () {
+      saveCurrentNote(false);
+      currentNoteId = null;
+      renderMyNotes();
+      showStudentSection('mynotes');
+    };
+
+    window.noteExec = function (cmd, val) {
+      document.getElementById('noteEditorBody').focus();
+      document.execCommand(cmd, false, val || null);
+      window.scheduleNoteAutosave();
+      updateNoteToolbarState();
+    };
+
+    function updateNoteToolbarState() {
+      function setActive(id, cmd) {
+        var btn = document.getElementById(id);
+        if (!btn) return;
+        var on = false;
+        try { on = document.queryCommandState(cmd); } catch (e) { /* ignore */ }
+        btn.classList.toggle('active', on);
+      }
+      setActive('noteBoldBtn', 'bold');
+      setActive('noteItalicBtn', 'italic');
+      setActive('noteUnderlineBtn', 'underline');
+      setActive('noteStrikeBtn', 'strikeThrough');
+      setActive('noteUlBtn', 'insertUnorderedList');
+      setActive('noteOlBtn', 'insertOrderedList');
+      try {
+        var block = (document.queryCommandValue('formatBlock') || '').toUpperCase();
+        var sel = document.getElementById('noteTextStyle');
+        if (sel) sel.value = (block === 'H2' || block === 'H3') ? block : 'P';
+      } catch (e) { /* ignore */ }
+    }
+    (function () {
+      var body = document.getElementById('noteEditorBody');
+      if (body) {
+        ['keyup', 'mouseup', 'touchend'].forEach(function (evt) {
+          body.addEventListener(evt, updateNoteToolbarState);
+        });
+      }
+    })();
+
+    // On mobile, tapping a toolbar button (bold, list, ...) fires a
+    // "mousedown"/"touchstart" first, which moves focus away from the
+    // note and collapses whatever text was selected — so by the time the
+    // click actually runs execCommand, there's nothing selected left to
+    // format. Preventing the default here keeps the selection intact,
+    // which is what makes the toolbar actually work on touch screens.
+    (function () {
+      var toolbar = document.querySelector('.note-toolbar-scroll');
+      if (!toolbar) return;
+      toolbar.addEventListener('mousedown', function (event) {
+        if (event.target.closest('.note-tb-btn')) event.preventDefault();
+      });
+      toolbar.addEventListener('touchstart', function (event) {
+        if (event.target.closest('.note-tb-btn')) event.preventDefault();
+      }, { passive: false });
+    })();
+
+    window.noteHighlight = function () {
+      var accentSoft = getComputedStyle(document.documentElement).getPropertyValue('--accent-soft').trim() || '#fff59d';
+      window.noteExec('hiliteColor', accentSoft);
+    };
+
+    window.insertChecklistItem = function () {
+      window.noteExec('insertHTML', '<div class="note-checklist-item"><input type="checkbox"><span contenteditable="true">مهمة جديدة</span></div><div><br></div>');
+    };
+
+    window.insertNoteLink = function () {
+      var url = prompt('رابط الصفحة:');
+      if (!url) return;
+      window.noteExec('createLink', url);
+    };
+
+    window.insertNoteTable = function () {
+      window.noteExec('insertHTML', '<table class="note-table"><tr><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td></tr></table><div><br></div>');
+    };
+
+    window.insertNoteImage = function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        window.noteExec('insertHTML', '<img src="' + reader.result + '" class="note-image">');
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
     };
 
     // ---------- streak (consecutive attendance) ----------
@@ -3425,12 +3934,129 @@
     }
     function badgeTileHtml(tier, value, titleKey, unitKey) {
       var unlocked = value >= tier.threshold;
-      return '<div class="badge-tile' + (unlocked ? ' unlocked' : '') + '">' +
+      var clamped = Math.min(value, tier.threshold);
+      var attrs = unlocked
+        ? ' role="button" tabindex="0" aria-label="' + escapeHtml(window.t('shareBadgeAria') || 'مشاركة الشارة') + '" onclick="shareBadgeImage(\'' + tier.tier + '\',\'' + titleKey + '\',\'' + unitKey + '\',' + clamped + ',' + tier.threshold + ')" onkeydown="if(event.key===\'Enter\'){shareBadgeImage(\'' + tier.tier + '\',\'' + titleKey + '\',\'' + unitKey + '\',' + clamped + ',' + tier.threshold + ')}"'
+        : '';
+      return '<div class="badge-tile' + (unlocked ? ' unlocked' : '') + '"' + attrs + '>' +
         '<div class="badge-icon tier-' + tier.tier + '">' + tier.svg + '</div>' +
         '<div class="badge-title">' + escapeHtml(window.t(titleKey)) + '</div>' +
-        '<div class="badge-progress">' + Math.min(value, tier.threshold) + ' / ' + tier.threshold + ' ' + escapeHtml(window.t(unitKey)) + '</div>' +
+        '<div class="badge-progress">' + clamped + ' / ' + tier.threshold + ' ' + escapeHtml(window.t(unitKey)) + '</div>' +
+        (unlocked ? '<div class="badge-share-hint">' + escapeHtml(window.t('tapToShareBadge') || 'اضغط للمشاركة') + '</div>' : '') +
         '</div>';
     }
+
+    // ---------- badge sharing: renders the earned badge onto a canvas and
+    // downloads it as a PNG (or hands it to the native share sheet on
+    // mobile, when available, so the student can send it straight to a
+    // parent instead of only saving it). ----------
+    var BADGE_TIER_HEX = { bronze: '#cd7f32', silver: '#b7c0cc', gold: '#f2b53c', diamond: '#57c7f0' };
+
+    function shadeHexColor(hex, percent) {
+      var num = parseInt(hex.replace('#', ''), 16),
+        amt = Math.round(2.55 * percent),
+        R = (num >> 16) + amt,
+        G = (num >> 8 & 0x00FF) + amt,
+        B = (num & 0x0000FF) + amt;
+      return '#' + (0x1000000 + (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255)).toString(16).slice(1);
+    }
+
+    function drawBadgeStar(ctx, cx, cy, spikes, outerR, innerR) {
+      var rot = Math.PI / 2 * 3, step = Math.PI / spikes;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - outerR);
+      for (var i = 0; i < spikes; i++) {
+        ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+        rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+        rot += step;
+      }
+      ctx.lineTo(cx, cy - outerR);
+      ctx.closePath();
+    }
+
+    function downloadImageBlob(blob, fileName) {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+    }
+
+    window.shareBadgeImage = function (tierKey, titleKey, unitKey, value, threshold) {
+      if (!confirm(window.t('confirmDownloadBadge') || 'هل تريد تحميل هذه الشارة كصورة؟')) return;
+
+      var title = window.t(titleKey);
+      var progressLabel = value + ' / ' + threshold + ' ' + window.t(unitKey);
+      var name = (student && student.name) || '';
+      var color = BADGE_TIER_HEX[tierKey] || '#f2b53c';
+
+      var canvas = document.createElement('canvas');
+      var W = 900, H = 620;
+      canvas.width = W; canvas.height = H;
+      var ctx = canvas.getContext('2d');
+
+      var bgGrad = ctx.createLinearGradient(0, 0, W, H);
+      bgGrad.addColorStop(0, '#11151c');
+      bgGrad.addColorStop(1, '#1b2230');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      var cx = W / 2, cy = 230, r = 120;
+      var circleGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r);
+      circleGrad.addColorStop(0, color);
+      circleGrad.addColorStop(1, shadeHexColor(color, -25));
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = circleGrad;
+      ctx.fill();
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = 'rgba(255,255,255,.35)';
+      ctx.stroke();
+
+      ctx.fillStyle = '#fff';
+      drawBadgeStar(ctx, cx, cy, 5, r * 0.55, r * 0.25);
+      ctx.fill();
+
+      ctx.direction = 'rtl';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 46px Tajawal, "IBM Plex Sans Arabic", sans-serif';
+      ctx.fillText(title, cx, 415);
+
+      ctx.font = '26px Tajawal, "IBM Plex Sans Arabic", sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,.75)';
+      ctx.fillText(progressLabel, cx, 458);
+
+      if (name) {
+        ctx.font = '600 24px Tajawal, "IBM Plex Sans Arabic", sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,.62)';
+        ctx.fillText(name, cx, 515);
+      }
+
+      ctx.font = '20px Manrope, sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,.4)';
+      ctx.direction = 'ltr';
+      ctx.fillText('Math Center', cx, 570);
+
+      canvas.toBlob(function (blob) {
+        if (!blob) return;
+        var fileName = 'badge-' + tierKey + '-' + Date.now() + '.png';
+        var file;
+        try { file = new File([blob], fileName, { type: 'image/png' }); } catch (e) { file = null; }
+        if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], title: title }).catch(function () { downloadImageBlob(blob, fileName); });
+        } else {
+          downloadImageBlob(blob, fileName);
+        }
+      }, 'image/png');
+    };
+
     window.renderBadgesPage = function () {
       var attGrid = document.getElementById('attendanceBadgesGrid');
       if (!attGrid || !student) return;
@@ -3593,7 +4219,7 @@
       window.onMCUpdate('notifications', renderCommunications);
       window.onMCUpdate('students', function () {
         var fresh = window.getStudentById(session.studentId);
-        if (fresh) { student = fresh; renderProfile(); }
+        if (fresh) { student = fresh; renderProfile(); renderAccountPage(); }
         renderLeaderboard();
       });
     });
