@@ -947,7 +947,7 @@
   </div>
 
   <div class="mc-loader" id="mcLoader">
-    <div class="spinner"></div><span>جاري التحميل...</span>
+    <div class="spinner"></div><span data-t="loading">جاري التحميل...</span>
   </div>
 
   <div class="shell-wide">
@@ -989,7 +989,7 @@
       <button class="tab active" data-tab="setup" onclick="switchTab('setup')" data-t="mainSection">الرئيسية</button>
       <button class="tab" data-tab="record" onclick="switchTab('record')" data-t="fullRecord">السجل الشامل</button>
       <button class="tab" data-tab="grades" onclick="switchTab('grades')" data-t="gradesSection">الدرجات</button>
-      <button class="tab" data-tab="communication" onclick="switchTab('communication')">الواجبات والملاحظات</button>
+      <button class="tab" data-tab="communication" onclick="switchTab('communication')" data-t="homeworkNotesTab">الواجبات والملاحظات</button>
     </div>
 
     <!-- SETUP -->
@@ -1011,7 +1011,7 @@
 
       <!-- UNPAID STUDENTS -->
       <div class="card" style="margin-top:14px;">
-        <h3 style="font-size:15px; margin-bottom:12px;">الطلاب الغير دافعين (<span id="unpaidCount">0</span>)</h3>
+        <h3 style="font-size:15px; margin-bottom:12px;"><span data-t="unpaidStudentsTitle">الطلاب الغير دافعين</span> (<span id="unpaidCount">0</span>)</h3>
         <div class="filters">
           <input type="text" class="input" id="unpaidFilterName" placeholder="فلترة بالاسم" oninput="renderUnpaidSection()">
           <div class="chip-select" id="unpaidFilterCenter"></div>
@@ -1019,20 +1019,20 @@
         </div>
         <div id="unpaidList" style="margin-top:10px;"></div>
         <div class="empty-state" id="unpaidEmpty" style="display:none;">
-          <p>تم الدفع من كل الطلاب </p>
+          <p data-t="unpaidAllPaid">تم الدفع من كل الطلاب </p>
         </div>
       </div>
 
       <!-- LEADERBOARD -->
       <div class="card" style="margin-top:14px;">
-        <h3 style="font-size:15px; margin-bottom:12px;">لوحة الصدارة</h3>
+        <h3 style="font-size:15px; margin-bottom:12px;" data-t="leaderboard">لوحة الصدارة</h3>
         <div class="filters">
           <div class="chip-select" id="lbFilterCenter"></div>
           <div class="chip-select" id="lbFilterClass"></div>
         </div>
         <div id="leaderboardList" style="margin-top:10px;"></div>
         <div class="empty-state" id="leaderboardEmpty" style="display:none;">
-          <p>لا يوجد بيانات كافية لعرض الترتيب بعد</p>
+          <p data-t="leaderboardEmpty">لا يوجد بيانات كافية لعرض الترتيب بعد</p>
         </div>
       </div>
     </div>
@@ -1118,29 +1118,29 @@
 
     <div class="section" id="section-communication">
       <div class="card">
-        <h3 style="font-size:15px; margin-bottom:12px;">رفع واجب</h3>
-        <div class="field"><label>عنوان الواجب</label><input id="homeworkTitle" class="input" type="text"></div>
+        <h3 style="font-size:15px; margin-bottom:12px;" data-t="uploadHomeworkTitle">رفع واجب</h3>
+        <div class="field"><label data-t="homeworkTitleField">عنوان الواجب</label><input id="homeworkTitle" class="input" type="text"></div>
         <div class="field"><label data-t="homeworkFileLabel">ملف PDF أو صورة</label><label class="file-picker"><span
               data-t="chooseFile">اختيار ملف</span><span class="file-picker-name" id="homeworkFileName"
               data-t="noFileChosen">لم يتم اختيار ملف</span><input id="homeworkFile" type="file"
               accept="application/pdf,image/*" hidden></label></div>
-        <div class="field"><label>السنتر والصف</label>
+        <div class="field"><label data-t="centerAndClassField">السنتر والصف</label>
           <div class="filters-row">
             <div class="chip-select" id="homeworkCenter"></div>
             <div class="chip-select" id="homeworkClass"></div>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="submitHomework()">حفظ الواجب</button>
+        <button class="btn btn-primary" onclick="submitHomework()" data-t="saveHomeworkBtn">حفظ الواجب</button>
       </div>
       <div class="card message-form">
-        <h3 style="font-size:15px; margin-bottom:12px;">إرسال ملاحظة</h3>
-        <div class="field"><label>بحث باسم الطالب</label><button type="button" id="noteStudentPicker"
-            class="input picker-button" onclick="openNoteStudentPicker()">اختر طالباً للبحث</button></div>
-        <div class="field"><label>المستهدف</label><select id="noteTarget" class="input" hidden></select><button
-            type="button" id="noteTargetPicker" class="input picker-button" onclick="openNoteTargetPicker()">كل
+        <h3 style="font-size:15px; margin-bottom:12px;" data-t="sendNoteTitle">إرسال ملاحظة</h3>
+        <div class="field"><label data-t="searchByStudentName">بحث باسم الطالب</label><button type="button" id="noteStudentPicker"
+            class="input picker-button" onclick="openNoteStudentPicker()" data-t="chooseStudentToSearchBtn">اختر طالباً للبحث</button></div>
+        <div class="field"><label data-t="targetField">المستهدف</label><select id="noteTarget" class="input" hidden></select><button
+            type="button" id="noteTargetPicker" class="input picker-button" onclick="openNoteTargetPicker()" data-t="allStudentsBtn">كل
             الطلاب</button></div>
-        <div class="field"><textarea id="noteText" class="input" placeholder="اكتب الملاحظة"></textarea></div>
-        <button class="btn btn-primary" onclick="submitNote()">إرسال الملاحظة</button>
+        <div class="field"><textarea id="noteText" class="input" placeholder="اكتب الملاحظة" data-t-ph="writeNotePh"></textarea></div>
+        <button class="btn btn-primary" onclick="submitNote()" data-t="sendNoteBtn">إرسال الملاحظة</button>
       </div>
     </div>
   </div>
@@ -1177,7 +1177,7 @@
         <path d="M16 3v4h4M8 12h8M8 16h6" />
         <path d="m15 18 4-4" />
       </svg>
-      <span>الواجبات</span>
+      <span data-t="homeworkNav">الواجبات</span>
     </button>
   </nav>
 
@@ -1377,39 +1377,39 @@
     </div>
     <div class="detail-page-body">
       <div class="tabs">
-        <button class="tab active" id="detailTabAttendance" onclick="showStudentDetail('attendance')">الحضور
+        <button class="tab active" id="detailTabAttendance" onclick="showStudentDetail('attendance')" data-t="attendanceTabLabel">الحضور
           والغياب</button>
-        <button class="tab" id="detailTabGrades" onclick="showStudentDetail('grades')">الدرجات</button>
+        <button class="tab" id="detailTabGrades" onclick="showStudentDetail('grades')" data-t="gradesSection">الدرجات</button>
       </div>
       <div id="studentDetailList"></div>
-      <button class="btn btn-bad" style="margin-top:18px" onclick="removeDetailStudent()">حذف الطالب نهائياً</button>
+      <button class="btn btn-bad" style="margin-top:18px" onclick="removeDetailStudent()" data-t="deleteStudentPermanently">حذف الطالب نهائياً</button>
     </div>
   </div>
 
   <div class="overlay" id="resetConfirmModal">
     <div class="modal">
-      <div class="modal-head"><span class="modal-title">تأكيد تصفير البيانات</span><button class="modal-close"
+      <div class="modal-head"><span class="modal-title" data-t="resetConfirmTitle">تأكيد تصفير البيانات</span><button class="modal-close"
           onclick="closeModal('resetConfirmModal')">&times;</button></div>
       <p id="resetConfirmText" class="muted" style="font-size:13px; line-height:1.8; margin-bottom:16px;"></p>
-      <div class="grid-2"><button class="btn btn-ghost" onclick="closeModal('resetConfirmModal')">إلغاء</button><button
-          class="btn btn-bad" onclick="continueResetData()">متابعة</button></div>
+      <div class="grid-2"><button class="btn btn-ghost" onclick="closeModal('resetConfirmModal')" data-t="cancel">إلغاء</button><button
+          class="btn btn-bad" onclick="continueResetData()" data-t="continueBtn">متابعة</button></div>
     </div>
   </div>
   <div class="overlay" id="confirmModal">
     <div class="modal">
-      <div class="modal-head"><span class="modal-title" id="confirmModalTitle">تأكيد</span><button class="modal-close"
+      <div class="modal-head"><span class="modal-title" id="confirmModalTitle" data-t="confirmTitle">تأكيد</span><button class="modal-close"
           onclick="closeModal('confirmModal')">&times;</button></div>
       <p id="confirmModalText" class="muted" style="font-size:13px; line-height:1.8; margin-bottom:16px;"></p>
-      <div class="grid-2"><button class="btn btn-ghost" onclick="closeModal('confirmModal')">إلغاء</button><button
-          class="btn btn-bad" id="confirmModalOkBtn">تأكيد الحذف</button></div>
+      <div class="grid-2"><button class="btn btn-ghost" onclick="closeModal('confirmModal')" data-t="cancel">إلغاء</button><button
+          class="btn btn-bad" id="confirmModalOkBtn" data-t="confirmDeleteBtn">تأكيد الحذف</button></div>
     </div>
   </div>
 
   <div class="overlay" id="attendanceQueueModal">
     <div class="modal">
-      <div class="modal-head"><span class="modal-title">إرسال رسائل الغياب</span><button class="modal-close"
+      <div class="modal-head"><span class="modal-title" data-t="sendAbsenceMessagesTitle">إرسال رسائل الغياب</span><button class="modal-close"
           onclick="closeModal('attendanceQueueModal')">&times;</button></div>
-      <p class="muted" style="font-size:12.5px; margin-bottom:10px;">
+      <p class="muted" style="font-size:12.5px; margin-bottom:10px;" data-t="absenceQueueHint">
         دوس "إرسال" جنب كل طالب لوحده. هيفتح واتساب برسالته جاهزة، ابعتها وارجع تاني هنا للطالب اللي بعده.
       </p>
       <div id="attendanceQueueList"></div>
@@ -1418,34 +1418,34 @@
 
   <div class="overlay" id="studentPickerModal">
     <div class="modal">
-      <div class="modal-head"><span class="modal-title">اختيار الطالب</span><button class="modal-close"
+      <div class="modal-head"><span class="modal-title" data-t="chooseStudentTitle">اختيار الطالب</span><button class="modal-close"
           onclick="closeModal('studentPickerModal')">&times;</button></div>
-      <input id="gradeStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب"
+      <input id="gradeStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب" data-t-ph="searchByStudentName"
         oninput="renderStudentPicker()">
       <div class="picker-results" id="studentPickerResults" style="margin-top:12px;"></div>
     </div>
   </div>
   <div class="overlay" id="noteStudentPickerModal">
     <div class="modal">
-      <div class="modal-head"><span class="modal-title">اختيار طالب للملاحظة</span><button class="modal-close"
+      <div class="modal-head"><span class="modal-title" data-t="chooseStudentForNoteTitle">اختيار طالب للملاحظة</span><button class="modal-close"
           onclick="closeModal('noteStudentPickerModal')">&times;</button></div>
-      <input id="noteStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب"
+      <input id="noteStudentSearch" class="input" type="search" placeholder="ابحث باسم الطالب" data-t-ph="searchByStudentName"
         oninput="renderNoteStudentPicker()">
       <div class="picker-results" id="noteStudentPickerResults" style="margin-top:12px;"></div>
     </div>
   </div>
   <div class="overlay" id="noteTargetPickerModal">
     <div class="modal">
-      <div class="modal-head"><span class="modal-title">اختيار مستهدف الملاحظة</span><button class="modal-close"
+      <div class="modal-head"><span class="modal-title" data-t="chooseNoteTargetTitle">اختيار مستهدف الملاحظة</span><button class="modal-close"
           onclick="closeModal('noteTargetPickerModal')">&times;</button></div>
-      <input id="noteTargetSearch" class="input" type="search" placeholder="ابحث باسم الطالب"
+      <input id="noteTargetSearch" class="input" type="search" placeholder="ابحث باسم الطالب" data-t-ph="searchByStudentName"
         oninput="renderNoteTargetPicker()">
       <div class="picker-results" id="noteTargetPickerResults" style="margin-top:12px;"></div>
     </div>
   </div>
   <div class="overlay" id="classCenterPickerModal">
     <div class="modal">
-      <div class="modal-head"><span class="modal-title" id="classCenterPickerTitle">اختيار السنتر</span><button
+      <div class="modal-head"><span class="modal-title" id="classCenterPickerTitle" data-t="chooseCenterTitle">اختيار السنتر</span><button
           class="modal-close" onclick="closeModal('classCenterPickerModal')">&times;</button></div>
       <div class="picker-results" id="classCenterPickerResults"></div>
     </div>
@@ -2134,7 +2134,7 @@
         };
         wrap.appendChild(option);
       });
-      if (!results.length) wrap.innerHTML = '<div class="empty-state">لا يوجد طالب مطابق</div>';
+      if (!results.length) wrap.innerHTML = '<div class="empty-state">' + window.t('noMatchingStudent') + '</div>';
     };
 
     function renderGrades() {
@@ -2280,7 +2280,7 @@
       if (search) window.getStudents().filter(function (student) { return (student.name || '').toLowerCase().indexOf(search) !== -1; }).forEach(function (student) {
         addOption('student:' + student.id, student.name + ' · ' + student.phone);
       });
-      if (search && !wrap.children.length) wrap.innerHTML = '<div class="empty-state">لا يوجد طالب مطابق</div>';
+      if (search && !wrap.children.length) wrap.innerHTML = '<div class="empty-state">' + window.t('noMatchingStudent') + '</div>';
     };
     window.openNoteStudentPicker = function () {
       document.getElementById('noteStudentSearch').value = '';
@@ -2304,7 +2304,7 @@
         };
         wrap.appendChild(option);
       });
-      if (!results.length) wrap.innerHTML = '<div class="empty-state">اكتب اسم الطالب للبحث</div>';
+      if (!results.length) wrap.innerHTML = '<div class="empty-state">' + window.t('typeStudentNameToSearch') + '</div>';
     };
     function openClassCenterPicker(cls) {
       document.getElementById('classCenterPickerTitle').textContent = 'اختر السنتر لـ ' + className(cls);
@@ -2453,7 +2453,7 @@
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg></button>';
         wrap.appendChild(row);
       });
-      if (!settings.centers.length) wrap.innerHTML = '<div class="empty-state">لا يوجد سناتر بعد</div>';
+      if (!settings.centers.length) wrap.innerHTML = '<div class="empty-state">' + window.t('noCentersYet') + '</div>';
       wrap.querySelectorAll('[data-center-index]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var index = Number(btn.dataset.centerIndex);
@@ -2488,7 +2488,7 @@
       var wrap = document.getElementById('passwordStudentsWrap');
       wrap.innerHTML = '';
       if (!search) {
-        wrap.innerHTML = '<div class="empty-state">اكتب اسم الطالب للبحث</div>';
+        wrap.innerHTML = '<div class="empty-state">' + window.t('typeStudentNameToSearch') + '</div>';
         return;
       }
       var students = window.getStudents().filter(function (student) { return (student.name || '').toLowerCase().indexOf(search) !== -1; });
@@ -2504,7 +2504,7 @@
         };
         wrap.appendChild(option);
       });
-      if (!students.length) wrap.innerHTML = '<div class="empty-state">لا يوجد طالب مطابق</div>';
+      if (!students.length) wrap.innerHTML = '<div class="empty-state">' + window.t('noMatchingStudent') + '</div>';
     };
     window.saveStudentPassword = function () {
       var password = document.getElementById('newStudentPassword').value.trim();
