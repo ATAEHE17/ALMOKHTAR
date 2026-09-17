@@ -3073,7 +3073,7 @@
     </svg>
   </button>
 
-  <a class="fab-whatsapp" href="https://wa.me/201024259203" target="_blank" rel="noopener" aria-label="تواصل مع المستر عبر واتساب">
+  <a class="fab-whatsapp" href="https://wa.me/393715124231" target="_blank" rel="noopener" aria-label="تواصل مع المستر عبر واتساب">
     <svg viewBox="0 0 24 24" fill="currentColor">
       <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.82L2 22l5.42-1.42a9.86 9.86 0 0 0 4.62 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.09c-.24.68-1.4 1.31-1.93 1.35-.5.05-1.03.29-3.46-.72-2.92-1.21-4.79-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.83 2 .9 2.15.07.15.12.32.02.51-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.15.46.13.63-.08.17-.2.72-.84.91-1.13.19-.29.38-.24.64-.15.27.1 1.68.79 1.97.94.29.15.48.22.55.34.07.13.07.72-.17 1.4z" />
     </svg>
@@ -3276,8 +3276,8 @@
     // "Contact Us" links — edit these 3 in one place whenever they change.
     var CONTACT_LINKS = {
       facebook: 'https://web.facebook.com/profile.php?id=61568315912358',
-      instagram: 'https://www.instagram.com/abdalla_t17/',
-      whatsapp: 'https://wa.me/3715124231'
+      instagram: 'https://www.instagram.com/direct/t/17843759472400487/',
+      whatsapp: 'https://wa.me/393715124231'
     };
     document.getElementById('contactUsFacebook').href = CONTACT_LINKS.facebook;
     document.getElementById('contactUsInstagram').href = CONTACT_LINKS.instagram;
@@ -3852,21 +3852,25 @@
       }
     })();
 
-    // On mobile, tapping a toolbar button (bold, list, ...) fires a
-    // "mousedown"/"touchstart" first, which moves focus away from the
-    // note and collapses whatever text was selected — so by the time the
-    // click actually runs execCommand, there's nothing selected left to
-    // format. Preventing the default here keeps the selection intact,
-    // which is what makes the toolbar actually work on touch screens.
+    // Tapping a toolbar button (bold, list, ...) fires "mousedown" first,
+    // which moves focus away from the note and collapses whatever text
+    // was selected — so by the time the click actually runs execCommand,
+    // there's nothing selected left to format. Preventing the default on
+    // mousedown keeps the selection intact.
+    //
+    // IMPORTANT: this must NOT also preventDefault() on "touchstart". Per
+    // the touch event spec, preventDefault() on touchstart cancels the
+    // browser's synthetic mouse/click events for that tap — so on phones
+    // the onclick="noteExec(...)" handlers on these buttons were never
+    // firing at all (the buttons looked dead: no response, no visible
+    // press). Only mousedown needs to be prevented; click still fires
+    // normally afterwards on both touch and desktop.
     (function () {
       var toolbar = document.querySelector('.note-toolbar-scroll');
       if (!toolbar) return;
       toolbar.addEventListener('mousedown', function (event) {
         if (event.target.closest('.note-tb-btn')) event.preventDefault();
       });
-      toolbar.addEventListener('touchstart', function (event) {
-        if (event.target.closest('.note-tb-btn')) event.preventDefault();
-      }, { passive: false });
     })();
 
     window.noteHighlight = function () {
