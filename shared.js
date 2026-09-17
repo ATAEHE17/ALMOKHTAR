@@ -70,7 +70,16 @@ window.getDeviceId = function () {
 };
 
 /* ---------------- multi-device session enforcement (max 2 devices per account) ---------------- */
-window.MC_MAX_DEVICES = 2;
+window.MC_MAX_DEVICES = 2; // fallback used for students, and for admin before settings.maxAdminDevices is ever set
+
+// Admin's own device-count limit is configurable from the settings screen
+// (settings.maxAdminDevices). Falls back to MC_MAX_DEVICES when unset/invalid.
+window.getMaxAdminDevices = function () {
+  var settings = window.getSettings ? window.getSettings() : null;
+  var n = settings && parseInt(settings.maxAdminDevices, 10);
+  if (!n || n < 1) n = window.MC_MAX_DEVICES;
+  return n;
+};
 
 // Normalizes an owner's (student or admin) active sessions into a
 // { deviceId: lastSeenTimestamp } map, folding in the old single-device
@@ -88,11 +97,14 @@ window.getActiveDeviceSessions = function (owner) {
 };
 
 // A device may log in if it already holds one of the slots, or if there is
-// a free slot (fewer than MC_MAX_DEVICES devices currently active).
-window.canDeviceLogin = function (sessions, deviceId) {
+// a free slot (fewer than maxDevices devices currently active). maxDevices
+// is optional and defaults to MC_MAX_DEVICES (used for students; admin
+// login passes window.getMaxAdminDevices() so it can be configured).
+window.canDeviceLogin = function (sessions, deviceId, maxDevices) {
   var ids = Object.keys(sessions || {});
   if (ids.indexOf(deviceId) !== -1) return true;
-  return ids.length < window.MC_MAX_DEVICES;
+  var max = maxDevices || window.MC_MAX_DEVICES;
+  return ids.length < max;
 };
 
 window.updateStudentSession = function (studentId, deviceId) {
@@ -113,6 +125,34 @@ window.updateAdminSession = function (deviceId) {
   settings.adminSessions = sessions;
   window.saveSettings(settings);
   return sessions;
+};
+
+// Keeps a logged-in admin tab honest in real time: whenever settings changes
+// (e.g. another device/tab hits "log out other admin devices"), check
+// whether this device is still in settings.adminSessions. If it's been
+// dropped, clear the local session and send this tab back to the login
+// page immediately — no need to wait for a refresh.
+// onKicked (optional) lets the caller show a toast/message before redirecting.
+window.startAdminSessionGuard = function (onKicked) {
+  var deviceId = window.getDeviceId();
+  function check() {
+    var settings = window.getSettings() || {};
+    var sessions = window.getActiveDeviceSessions({ activeSessions: settings.adminSessions });
+    var ids = Object.keys(sessions);
+    // Only act once we actually have a recorded session list — an empty/
+    // unset adminSessions just means nobody has logged in yet and must not
+    // be treated as "this device got kicked".
+    if (ids.length > 0 && ids.indexOf(deviceId) === -1) {
+      window.clearSession();
+      if (typeof onKicked === 'function') {
+        onKicked();
+      } else {
+        window.location.replace('index.html');
+      }
+    }
+  }
+  window.onMCUpdate('settings', check);
+  check();
 };
 window.togglePaid = function (studentId) {
   var list = window.getStudents();
