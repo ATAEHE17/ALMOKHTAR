@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>صفحة الطالب — سنتر الرياضيات</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="icon" type="image/png" href="almokhtar.png">
+  <link rel="icon" type="image/png" href="logo.png">
 
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Tajawal:wght@400;500;700&family=Amiri:wght@400;700&display=swap"
@@ -2522,8 +2522,8 @@
           container.appendChild(qualsBlock);
           units.push({ el: qualsTitle, text: 'الشهادات العلمية' });
           [
-            'بكالوريوس هندسة قسم ميكانيكا جامعة القاهرة',
-            'ليسانس حقوق تخصص جنائي جامعة المنصورة',
+            'بكالوريس هندسة قسم ميكانيكا جامعة القاهرة',
+            'بكالوريس حقوق تخصص جنائي جامعة المنصورة',
             'دبلومة علم نفس وتنمية بشرية الأكاديمية الأمريكية'
           ].forEach(function (text) {
             var li = makeEl('li');
@@ -2559,7 +2559,7 @@
             if (charIndex <= text.length) {
               unit.el.textContent = text.slice(0, charIndex);
               charIndex++;
-              setTimeout(step, 16);
+              setTimeout(step, 40);
             } else {
               if (unit.reveal) unit.reveal.style.opacity = '1';
               setTimeout(function () { typeUnits(units, unitIndex + 1, onAllDone); }, 140);
