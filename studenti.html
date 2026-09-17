@@ -3190,6 +3190,21 @@
     </div>
   </div>
 
+  <div class="overlay" id="shareBadgeConfirmModal">
+    <div class="modal">
+      <div class="modal-head"><span class="modal-title" data-t="shareBadgeAria">مشاركة الشارة</span><button
+          class="modal-close" onclick="closeModal('shareBadgeConfirmModal')">&times;</button></div>
+      <p style="color:var(--text-dim); font-size:14px; line-height:1.6; margin:0 0 20px;"
+        data-t="confirmDownloadBadge">هل تريد تحميل هذه الشارة كصورة؟</p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('shareBadgeConfirmModal')"
+          data-t="cancel">إلغاء</button>
+        <button type="button" class="btn btn-primary" onclick="confirmShareBadgeImage()"
+          data-t="downloadImageBtn">تحميل الصورة</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="notificationsModal">
     <div class="modal">
       <div class="modal-head"><span class="modal-title" data-t="notificationsTitle">الإشعارات</span><button class="modal-close"
@@ -3988,9 +4003,20 @@
       setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
     }
 
-    window.shareBadgeImage = function (tierKey, titleKey, unitKey, value, threshold) {
-      if (!confirm(window.t('confirmDownloadBadge') || 'هل تريد تحميل هذه الشارة كصورة؟')) return;
+    var pendingBadgeShare = null;
 
+    window.shareBadgeImage = function (tierKey, titleKey, unitKey, value, threshold) {
+      pendingBadgeShare = { tierKey: tierKey, titleKey: titleKey, unitKey: unitKey, value: value, threshold: threshold };
+      openModal('shareBadgeConfirmModal');
+    };
+
+    window.confirmShareBadgeImage = function () {
+      closeModal('shareBadgeConfirmModal');
+      if (!pendingBadgeShare) return;
+      var p = pendingBadgeShare;
+      pendingBadgeShare = null;
+
+      var tierKey = p.tierKey, titleKey = p.titleKey, unitKey = p.unitKey, value = p.value, threshold = p.threshold;
       var title = window.t(titleKey);
       var progressLabel = value + ' / ' + threshold + ' ' + window.t(unitKey);
       var name = (student && student.name) || '';
