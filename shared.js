@@ -625,20 +625,65 @@ window.previewAccentColor = function (key) {
 // changes. Falls back to whatever <link rel="icon"> the page shipped with
 // if no custom logo has been set.
 var mcDefaultFavicon = null;
+var mcDefaultTouchIcon = null;
 window.applyFaviconFromSettings = function () {
-  var link = document.querySelector('link[rel="icon"]');
-  if (!link) return;
-  if (mcDefaultFavicon === null) {
-    mcDefaultFavicon = { href: link.getAttribute('href'), type: link.getAttribute('type') || '' };
-  }
   var settings = window.getSettings();
-  if (settings && settings.logo) {
-    link.setAttribute('href', settings.logo);
-    var mimeMatch = /^data:([^;]+);/.exec(settings.logo);
-    link.setAttribute('type', mimeMatch ? mimeMatch[1] : 'image/png');
-  } else {
-    link.setAttribute('href', mcDefaultFavicon.href);
-    if (mcDefaultFavicon.type) link.setAttribute('type', mcDefaultFavicon.type);
+  var logo = settings && settings.logo ? settings.logo : null;
+
+  // 1) Browser-tab favicon.
+  var link = document.querySelector('link[rel="icon"]');
+  if (link) {
+    if (mcDefaultFavicon === null) {
+      mcDefaultFavicon = { href: link.getAttribute('href'), type: link.getAttribute('type') || '' };
+    }
+    if (logo) {
+      link.setAttribute('href', logo);
+      var mimeMatch = /^data:([^;]+);/.exec(logo);
+      link.setAttribute('type', mimeMatch ? mimeMatch[1] : 'image/png');
+    } else {
+      link.setAttribute('href', mcDefaultFavicon.href);
+      if (mcDefaultFavicon.type) link.setAttribute('type', mcDefaultFavicon.type);
+    }
+  }
+
+  // 2) "Add to Home Screen" icon (iOS reads <link rel="apple-touch-icon">
+  // directly; Android/Chrome reads the icons list in the Web App Manifest).
+  // Neither existed before, so a shortcut added to the home screen fell
+  // back to a generic auto-generated letter icon and never picked up the
+  // admin's logo. We create both tags on first run if missing, then keep
+  // them pointed at the current logo — same pattern as the favicon above —
+  // so any shortcut added later grabs whatever logo is live at that time.
+  var touchLink = document.querySelector('link[rel="apple-touch-icon"]');
+  if (!touchLink) {
+    touchLink = document.createElement('link');
+    touchLink.setAttribute('rel', 'apple-touch-icon');
+    document.head.appendChild(touchLink);
+  }
+  if (mcDefaultTouchIcon === null) {
+    mcDefaultTouchIcon = touchLink.getAttribute('href') || (mcDefaultFavicon && mcDefaultFavicon.href) || '';
+  }
+  var iconSrc = logo || mcDefaultTouchIcon;
+  if (iconSrc) touchLink.setAttribute('href', iconSrc);
+
+  var manifestLink = document.querySelector('link[rel="manifest"]');
+  if (!manifestLink) {
+    manifestLink = document.createElement('link');
+    manifestLink.setAttribute('rel', 'manifest');
+    document.head.appendChild(manifestLink);
+  }
+  if (iconSrc) {
+    var iconMime = /^data:([^;]+);/.exec(iconSrc);
+    var manifestObj = {
+      name: (settings && (settings.platformName || settings.platformNameEn)) || 'Math Center',
+      short_name: (settings && (settings.platformNameEn || settings.platformName)) || 'Math Center',
+      start_url: '.',
+      display: 'standalone',
+      icons: [
+        { src: iconSrc, sizes: '192x192', type: iconMime ? iconMime[1] : 'image/png' },
+        { src: iconSrc, sizes: '512x512', type: iconMime ? iconMime[1] : 'image/png' }
+      ]
+    };
+    manifestLink.setAttribute('href', 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifestObj)));
   }
 };
 
