@@ -237,6 +237,11 @@ window.saveGrade = function (grade) {
   grade.date = grade.date || new Date().toISOString().slice(0, 10);
   grade.createdAt = new Date().toISOString();
   window._mc.set(newRef, grade);
+  // Same fix as markAttendance above: without this, renderGrades() called
+  // right after saveGrade() would still read the old cached list and the
+  // grade just added would seem to not have been saved, until the Firebase
+  // realtime listener came back a moment later.
+  if (Array.isArray(window._mcCache.grades)) window._mcCache.grades.push(grade);
   return grade;
 };
 
