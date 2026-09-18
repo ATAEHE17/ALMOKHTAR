@@ -196,6 +196,14 @@ window.markAttendance = function (studentId, status, dateStr, details) {
   var newRef = window._mc.push(window._mc.ref(window._mc.db, 'attendance'));
   var record = { id: newRef.key, studentId: studentId, date: date, status: status, details: details || [] };
   window._mc.set(newRef, record);
+  // Push into the local cache immediately — the Firebase realtime listener
+  // that would normally do this only fires after a round-trip to the
+  // server, so without this, anything that reads window.getAttendance()
+  // right after calling markAttendance() (e.g. the admin table re-render,
+  // or the "send absence messages" queue) would still see the student as
+  // unmarked for a moment: attendance looked like it hadn't saved, and a
+  // just-marked absent student wouldn't show up to have their message sent.
+  if (Array.isArray(window._mcCache.attendance)) window._mcCache.attendance.push(record);
   return record;
 };
 
