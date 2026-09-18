@@ -70,6 +70,16 @@ body {
     transition: background .25s ease, color .25s ease;
 }
 
+/* Kill the default mobile "flash" — the blue/grey rectangle Chrome/Safari
+   paint over any tappable element (buttons, links, divs with onclick...)
+   for a split second after a tap. We draw our own :active states instead. */
+*,
+*::before,
+*::after {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
 .page-math-background {
     position: fixed;
     inset: 0;
