@@ -6,8 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>لوحة تحكم الأستاذ — سنتر الرياضيات</title>
   <link rel="icon" type="image/svg+xml" href="user-icon.svg">
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="icon" type="image/png" href="ALMOKHTAR.jpg">
+  <!-- "Add to Home Screen" icon fallback (used until shared.js swaps it for
+       the admin-configured logo — see applyFaviconFromSettings). -->
+  <link rel="apple-touch-icon" href="ALMOKHTAR.jpg">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="سنتر الرياضيات">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&display=swap"
@@ -2705,6 +2710,9 @@
 
       window.applyAccentFromSettings();
       window.onMCUpdate('settings', window.applyAccentFromSettings);
+
+      window.applyFaviconFromSettings();
+      window.onMCUpdate('settings', window.applyFaviconFromSettings);
 
       // If this device gets removed from settings.adminSessions (another
       // admin device used "log out other devices"), react immediately
