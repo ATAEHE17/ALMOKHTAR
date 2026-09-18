@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>تأكيد الدخول — لوحة تحكم الأستاذ</title>
-    <link rel="stylesheet" href="shared.css">
-    <link rel="icon" type="image/png" href="almokhtar.png">
+    <link rel="stylesheet" href="shared.css?v=2">
+    <link rel="icon" type="image/png" href="ALMOKHTAR.jpg">
+    <link rel="apple-touch-icon" href="ALMOKHTAR.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="تأكيد الدخول">
+    <meta name="mobile-web-app-capable" content="yes">
     <style>
         .login-page {
             overflow: hidden;
@@ -121,16 +125,6 @@
 </head>
 
 <body class="login-page">
-    <script>
-        // TEMP DEBUG — shows any JS error as a plain popup so it's visible on
-        // mobile too (no devtools needed). Safe to remove once the bug's found.
-        window.onerror = function (msg, url, line, col) {
-            alert('حصل خطأ برمجي:\n' + msg + '\nفي: ' + url + '\nسطر: ' + line + ':' + col);
-        };
-        window.addEventListener('unhandledrejection', function (e) {
-            alert('حصل خطأ (promise):\n' + (e.reason && e.reason.message ? e.reason.message : e.reason));
-        });
-    </script>
     <div class="verify-wrap">
         <div class="login-card card">
             <div class="hero">
@@ -159,9 +153,9 @@
         </div>
     </div>
 
-    <script type="module" src="firebase.js"></script>
+    <script type="module" src="firebase.js?v=2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="shared.js"></script>
+    <script src="shared.js?v=2"></script>
     <script>
         window.applyCachedAccent();
         window.initEmailJS();
