@@ -659,13 +659,17 @@ window.applyFaviconFromSettings = function () {
     }
   }
 
-  // 2) "Add to Home Screen" icon (iOS reads <link rel="apple-touch-icon">
-  // directly; Android/Chrome reads the icons list in the Web App Manifest).
-  // Neither existed before, so a shortcut added to the home screen fell
-  // back to a generic auto-generated letter icon and never picked up the
-  // admin's logo. We create both tags on first run if missing, then keep
-  // them pointed at the current logo — same pattern as the favicon above —
-  // so any shortcut added later grabs whatever logo is live at that time.
+  // 2) "Add to Home Screen" icon. iOS reads <link rel="apple-touch-icon">
+  // directly — we keep this one dynamic, synced to the admin's logo, same
+  // as the favicon above. (Android/Chrome's icon + the "open as a real
+  // app, full screen" behavior instead come from a real manifest.json file
+  // linked statically in each page's <head> — a manifest built on the fly
+  // as a data: URI used to sit here, but several Android browsers handle a
+  // data: URI manifest inconsistently: on some phones the install step
+  // never resolved it and the whole page hung, and on others it silently
+  // fell back to opening the shortcut as a normal browser tab instead of a
+  // full-screen app. A plain static file is what every install guide
+  // recommends, so that's what we use now — see manifest.json.)
   var touchLink = document.querySelector('link[rel="apple-touch-icon"]');
   if (!touchLink) {
     touchLink = document.createElement('link');
@@ -677,27 +681,6 @@ window.applyFaviconFromSettings = function () {
   }
   var iconSrc = logo || mcDefaultTouchIcon;
   if (iconSrc) touchLink.setAttribute('href', iconSrc);
-
-  var manifestLink = document.querySelector('link[rel="manifest"]');
-  if (!manifestLink) {
-    manifestLink = document.createElement('link');
-    manifestLink.setAttribute('rel', 'manifest');
-    document.head.appendChild(manifestLink);
-  }
-  if (iconSrc) {
-    var iconMime = /^data:([^;]+);/.exec(iconSrc);
-    var manifestObj = {
-      name: (settings && (settings.platformName || settings.platformNameEn)) || 'Math Center',
-      short_name: (settings && (settings.platformNameEn || settings.platformName)) || 'Math Center',
-      start_url: '.',
-      display: 'standalone',
-      icons: [
-        { src: iconSrc, sizes: '192x192', type: iconMime ? iconMime[1] : 'image/png' },
-        { src: iconSrc, sizes: '512x512', type: iconMime ? iconMime[1] : 'image/png' }
-      ]
-    };
-    manifestLink.setAttribute('href', 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifestObj)));
-  }
 };
 
 /* ---------------- admin login OTP (email verification code) ----------------
