@@ -1,0 +1,14 @@
+{
+  "name": "مركز الرياضيات - Math Center",
+  "short_name": "Math Center",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#17171B",
+  "theme_color": "#5B21B6",
+  "icons": [
+    { "src": "ALMOKHTAR.jpg", "sizes": "192x192", "type": "image/jpeg" },
+    { "src": "ALMOKHTAR.jpg", "sizes": "512x512", "type": "image/jpeg" }
+  ]
+}
